@@ -1,0 +1,60 @@
+<app-navbar></app-navbar>
+
+<div class="background-container">
+
+  <h1 class="fade-in delay-title">Richieste nuovi ruoli</h1>
+
+  <p *ngIf="requests.length === 0" class="no-requests-message">
+    Al momento non ci sono richieste di nuovi ruoli.
+  </p>
+
+  <div class="card-container">
+
+  <!-- Ciclo per ogni richiesta di ruolo -->
+  <div *ngFor="let request of requests; let i = index" class="card">
+
+    <!-- Header della card: cambia colore in base al ruolo richiesto -->
+    <h3 class="card-header"
+        [ngClass]="{
+          'artist-header': request.newRole.toUpperCase() === 'ARTIST',
+          'moderator-header': request.newRole.toUpperCase() === 'MODERATOR',
+          'reviewer-header': request.newRole.toUpperCase() === 'REVIEWER'
+        }">
+
+      <small class="text-body-secondary">
+        Richiesta per diventare: <strong>{{ request.newRole }}</strong>
+      </small>
+      <div class="icon-actions">
+        <mat-icon class="user-icon"
+                  [routerLink]="['/edit-profile', request.idUser]"
+                  matTooltip="Visualizza utente">
+          person
+        </mat-icon>
+
+        <!-- Elimina richiesta -->
+        <mat-icon class="delete-icon"
+                  (click)="confirmDelete(i)"
+                  matTooltip="Rifiuta richiesta">
+          delete
+        </mat-icon>
+
+        <!-- Approvazione richiesta -->
+        <mat-icon class="approve-icon"
+                  (click)="approveRequest(request.newRole, request.emailUser, request.idRequest)"
+                  matTooltip="Approva Utente">
+          check_circle
+        </mat-icon>
+      </div>
+    </h3>
+
+    <!-- Corpo della card: dettagli richiesta -->
+    <div class="card-body">
+      <p class="card-text">Da: <strong>{{ request.emailUser }}</strong></p>
+      <p class="card-text">Motivazione: <strong>{{ request.description }}</strong></p>
+      <p class="card-text">Data: <strong>{{ request.date | date:'dd/MM/yyyy HH:mm' }}</strong></p>
+    </div>
+  </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

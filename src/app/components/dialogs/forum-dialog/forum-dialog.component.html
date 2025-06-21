@@ -1,0 +1,53 @@
+<!--Check-->
+<h1 mat-dialog-title>Inizia una discussione</h1>
+
+<mat-dialog-content>
+
+  <!-- Campo Titolo -->
+  <mat-form-field class="full-width" appearance="outline" color="accent" style="margin-top: 20px;">
+    <mat-label>Titolo</mat-label>
+    <input matInput #title maxlength="100" [(ngModel)]="formData.title" required>
+    <mat-hint align="end">{{title.value.length}} / 100</mat-hint>
+  </mat-form-field>
+
+  <!-- Campo Descrizione -->
+  <mat-form-field class="full-width" appearance="outline" color="accent">
+    <mat-label>Descrizione</mat-label>
+    <textarea matInput #description maxlength="256" [(ngModel)]="formData.description" required></textarea>
+    <mat-hint align="end">{{description.value.length}} / 256</mat-hint>
+  </mat-form-field>
+
+  <!-- Campo Upload immagine -->
+  <mat-form-field class="full-width" appearance="fill" color="accent">
+    <mat-label>Seleziona immagine</mat-label>
+
+    <!-- Input nascosto per selezione file -->
+    <input type="file"
+           (change)="selectFile($event)"
+           accept="image/*"
+           hidden
+           #fileInput>
+
+    <input matInput
+           [value]="selectedFileName || ''"
+           placeholder="Seleziona immagine"
+           readonly
+           (click)="fileInput.click()">
+
+    <!-- Pulsante per attivare la selezione file -->
+    <button mat-icon-button matSuffix (click)="fileInput.click()" aria-label="Seleziona file">
+      <mat-icon>upload</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <!-- Anteprima dell'immagine caricata -->
+  <div *ngIf="preview" class="preview-container">
+    <h3>Anteprima immagine</h3>
+    <img [src]="preview" class="preview">
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button color="accent" (click)="submit()">Pubblica</button>
+</mat-dialog-actions>

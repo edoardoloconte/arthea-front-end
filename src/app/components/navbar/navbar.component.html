@@ -1,0 +1,84 @@
+<!--check-->
+<header>
+  <nav>
+
+    <!-- Toggle menu per dispositivi mobili -->
+    <div class="menu-toggle" (click)="toggleMobileMenu()">
+      <mat-icon>menu</mat-icon>
+    </div>
+
+    <!-- Link di navigazione principali -->
+    <div class="nav-links" [class.open]="isMobileMenuOpened">
+
+      <!-- Logo -->
+      <a routerLink="/home" class="logo-container">
+        <img src="assets/Logo_traccia.png" class="arthea-logo">
+      </a>
+
+      <!-- Pulsante Crea Post (visibile solo per ARTIST) -->
+      <a *ngIf="role == 'ARTIST'" routerLink="/create-post" class="no-underline">
+        <button mat-flat-button class="create-post-btn">+ Crea Post</button>
+      </a>
+
+      <!-- Link a sezioni principali del sito -->
+      <a routerLink="/post-list" class="a-decoration">Pubblicazioni</a>
+      <a routerLink="/forum" class="a-decoration">Discussioni</a>
+    </div>
+
+    <div class="profile-container">
+      <a>
+        <img [src]="image" class="user-pic" (click)="toggleMenu()">
+      </a>
+    </div>
+
+    <!-- Menu a scomparsa del profilo -->
+    <div class="sub-menu-wrap" id="sub-menu-wrap" *ngIf="isMenuOpened">
+      <div class="sub-menu">
+
+        <!-- Info utente -->
+        <div class="user-info">
+          <img [src]="image">
+          <div class="user-text">
+            <h3>@{{ nickName }}</h3>
+            <div class="role-info">
+              <h2>{{ role }}</h2>
+
+              <mat-icon *ngIf="role == 'ADMIN'">verified_user</mat-icon>
+              <mat-icon *ngIf="role == 'MODERATOR'">security</mat-icon>
+              <mat-icon *ngIf="role == 'ARTIST'">brush</mat-icon>
+              <mat-icon *ngIf="role == 'STANDARD'">person</mat-icon>
+              <mat-icon *ngIf="role == 'REVIEWER'">star</mat-icon>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <!-- Link alle azioni del profilo -->
+        <a routerLink="/edit-profile" class="sub-menu-link">
+          <mat-icon>account_circle</mat-icon>
+          <p>Modifica Profilo</p>
+        </a>
+
+        <a *ngIf="role == 'MODERATOR' || role == 'ADMIN'" routerLink="/report" class="sub-menu-link">
+          <mat-icon>flag</mat-icon>
+          <p>Segnalazioni</p>
+        </a>
+
+        <!-- Link visibile solo ad ADMIN -->
+        <a *ngIf="role == 'ADMIN'" routerLink="/request" class="sub-menu-link">
+          <mat-icon>warning</mat-icon>
+          <p>Richieste</p>
+        </a>
+
+        <!-- Logout -->
+        <a (click)="onLogout()" class="sub-menu-link">
+          <mat-icon>logout</mat-icon>
+          <p>Logout</p>
+        </a>
+
+      </div>
+    </div>
+
+  </nav>
+</header>

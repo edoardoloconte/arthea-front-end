@@ -1,0 +1,115 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+
+  <h2 class="title1">Commenti segnalati</h2>
+
+  <!-- Messaggio se non ci sono segnalazioni -->
+  <div *ngIf="commentReports.length === 0" class="content">
+    nessun commento è stato segnalato
+  </div>
+
+  <!-- Lista dei commenti segnalati -->
+  <div class="card-container">
+    <div *ngFor="let report of commentReports; let i = index" class="card fade-in">
+
+      <!-- Header della card: data + icone azione -->
+      <h3 class="card-header comment-header">
+        <small class="text-body-secondary">{{ report.date | date:'dd/MM/yyyy' }}</small>
+        <span class="icon-group">
+          <!-- Visualizza commento (naviga al post associato) -->
+          <mat-icon class="action-icon" matTooltip="Visualizza Commento"
+                    (click)="navigateToPost(report.idCommentReported)">search</mat-icon>
+          <!-- Cancella la segnalazione -->
+          <mat-icon class="action-icon" matTooltip="Cancella Segnalazione"
+                    (click)="confirmDeleteReport(i, 'comment')">delete</mat-icon>
+        </span>
+      </h3>
+
+      <!-- Corpo della card con i dettagli -->
+      <div class="card-body">
+        <p class="card-text"><strong>Segnalato da:</strong> @{{ report.nicknameUserReporting }}</p>
+        <p class="card-text"><strong>Motivazione: </strong> {{ report.description }}</p>
+        <p class="card-text"><strong>Contenuto:</strong>  {{ report.reportReason }}</p>
+        <p class="card-text"><strong>Commento:</strong>  {{ report.commentDescription }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Separatore visivo -->
+  <div class="custom-line"></div>
+
+  <h2 class="title2">Post segnalati</h2>
+
+  <!-- Messaggio se non ci sono segnalazioni -->
+  <div *ngIf="postReports.length === 0" class="content">
+    nessun post è stato segnalato
+  </div>
+
+  <!-- Lista dei post segnalati -->
+  <div class="card-container">
+    <div *ngFor="let report of postReports; let i = index" class="card fade-in">
+
+      <!-- Header della card: data + icone azione -->
+      <h3 class="card-header post-header">
+        <small class="text-body-secondary">{{ report.date | date:'dd/MM/yyyy' }}</small>
+        <span class="icon-group">
+          <!-- Visualizza post -->
+          <mat-icon class="action-icon" matTooltip="Visualizza Post"
+                    (click)="navigateToPost(report.idPost)">search</mat-icon>
+          <!-- Cancella segnalazione -->
+          <mat-icon class="action-icon" matTooltip="Cancella segnalazione"
+                    (click)="confirmDeleteReport(i, 'post')">delete</mat-icon>
+        </span>
+      </h3>
+
+      <!-- Corpo della card con i dettagli -->
+      <div class="card-body">
+        <h2 class="card-title">{{ report.titlePost }}</h2>
+        <p class="card-text"><strong>Segnalato da:</strong> @{{ report.nicknameUserReporting }}</p>
+        <p class="card-text"><strong>Motivazione: </strong>{{ report.description }}</p>
+        <p class="card-text"><strong>Contenuto: </strong>{{ report.reportReason }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-line"></div>
+
+  <h2 class="title2">Forum segnalati</h2>
+
+  <!-- Messaggio se non ci sono segnalazioni -->
+  <div *ngIf="forumReports.length === 0" class="content">
+    nessun forum è stato segnalato
+  </div>
+
+  <!-- Lista dei forum segnalati -->
+  <div class="card-container">
+    <div *ngFor="let report of forumReports; let i = index" class="card fade-in">
+
+      <!-- Header della card: data + icone azione -->
+      <h3 class="card-header forum-header">
+        <small class="text-body-secondary">{{ report.date | date:'dd/MM/yyyy' }}</small>
+        <span class="icon-group">
+          <!-- Visualizza forum  -->
+          <mat-icon class="action-icon" matTooltip="Visualizza Forum"
+                    [id]="'forum-' + report.idForum"
+                    (click)="goToForum(report.idForum)">search</mat-icon>
+          <!-- Elimina segnalazione -->
+          <mat-icon class="action-icon" matTooltip="Elimina Segnalazione"
+                    (click)="confirmDeleteReport(i, 'forum')">delete</mat-icon>
+        </span>
+      </h3>
+
+      <!-- Corpo della card con i dettagli -->
+      <div class="card-body">
+        <h2 class="card-title">{{ report.titleForum }}</h2>
+        <p class="card-text"><strong>Segnalato da:</strong> @{{ report.nicknameUserReporting }}</p>
+        <p class="card-text"><strong>Motivazione:</strong> {{ report.description }}</p>
+        <p class="card-text"><strong>Contenuto:</strong> {{ report.reportReason }}</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<app-footer></app-footer>

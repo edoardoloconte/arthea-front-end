@@ -1,0 +1,173 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 0.95;
+    transform: translateY(0);
+  }
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 300px;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+#background-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('src/assets/creapost_sfondo.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.7;
+  z-index: 0;
+}
+
+#content-layer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+.square {
+  width: 550px;
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: white;
+  opacity: 0.95;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.container h3 {
+  font-size: xx-large;
+}
+
+.container h4 {
+  font-size: x-large;
+}
+
+.comment {
+  width: 100%;
+}
+
+.scritta {
+  font-weight: bold;
+  margin-top: 15px;
+  font-size: 30px;
+}
+
+.progress-bar {
+  padding: 0;
+}
+
+.progress {
+  width: 50px;
+}
+
+.mat-input-element {
+  font-size: medium;
+  font-weight: 200;
+}
+
+#fileInput {
+  position: absolute;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+}
+
+.mat-toolbar-single-row {
+  height: auto !important;
+  background: transparent;
+  padding: 0;
+}
+
+.mat-toolbar-single-row button {
+  width: 100px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  display: block;
+}
+
+
+.message {
+  background-color: #ddd;
+  padding: 15px;
+  color: #333;
+  border: #aaa solid 1px;
+  border-radius: 4px;
+  margin: 15px 0;
+}
+
+.preview {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.list-card {
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.text-inside-grid {
+  position: absolute;
+  left: 5px;
+}
+
+.image-inside-grid {
+  height: 50px;
+  position: absolute;
+  right: 5px;
+}
+
+button.btn-primary {
+  width: 90%;
+  margin: 20px auto;
+}

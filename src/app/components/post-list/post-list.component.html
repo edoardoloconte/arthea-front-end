@@ -1,0 +1,70 @@
+<!--Check-->
+
+<app-navbar></app-navbar>
+
+<div class="background-wrapper">
+
+  <p class="title">Ultime pubblicazioni</p>
+  <br>
+  <!-- Barra di ricerca -->
+  <div class="search-bar" [class.visible]="searchBarVisible">
+    <div class="input-group search-input-group">
+
+      <!-- Campo input per la ricerca -->
+      <input
+        [(ngModel)]="searchQuery"
+        class="form-control search-input"
+        type="search"
+        placeholder="Cerca il post o artista"
+        aria-label="Search">
+
+      <!-- Selettore per tipo di ricerca: artista o post -->
+      <select [(ngModel)]="searchType" class="form-select submenu-select">
+        <option value="1">Artista</option>
+        <option value="2">Post</option>
+      </select>
+
+      <button type="button" class="btn btn-outline-primary" (click)="search()">
+        Cerca
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Contenitore dei post visualizzati come card -->
+  <div class="posts-container">
+
+    <a
+      class="card"
+      *ngFor="let post of posts; let i = index"
+      (click)="navigateToPost(post.idPost)"
+      [class.visible]="cardsVisible"
+      [ngStyle]="cardsVisible ? {'animation-delay': (i * 150) + 'ms'} : {}">
+
+      <img
+        [src]="post.image || 'assets/immagine-slider1.jpg'"
+        class="card-img-top"
+        alt="Immagine post">
+
+      <div class="card-body">
+
+        <!-- Informazioni sull'utente autore del post -->
+        <div class="user-info">
+          <a [routerLink]="['/edit-profile', post.idUser]" (click)="$event.stopPropagation()" class="user-info user-link">
+            <img [src]="post.profilePicUser || 'assets/persona.png'" alt="Utente" class="user-img">
+            <span class="user-name">@{{ post.nameUser }}</span>
+          </a>
+        </div>
+
+        <h1 class="card-title">{{ post.title }}</h1>
+        <p class="card-text">{{ post.description }}</p>
+        <p class="card-text">
+          <small class="text-body-secondary">
+            Pubblicato: {{ post.dateCreation | date:'dd/MM/yyyy' }}
+          </small>
+        </p>
+      </div>
+    </a>
+  </div>
+</div>
+<app-footer></app-footer>

@@ -1,0 +1,137 @@
+.background-wrapper {
+  background-image: url('src/assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding-top: 64px;
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+.title {
+  margin-top: 130px;
+  font-size: 60px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-left: 60px;
+  margin-bottom: 15px;
+}
+
+/*  SEARCH BAR + INPUT E SELECT */
+.search-bar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.search-input-group {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1 1 auto;
+}
+
+.search-input:focus,
+.submenu-select:focus {
+  border-color: #F41F72;
+  box-shadow: 0 0 0 0.2rem rgba(244, 31, 114, 0.25);
+}
+
+.search-input:focus {
+  border-color: #F41F72 !important;
+  box-shadow: 0 0 0 0.2rem rgba(244, 31, 114, 0.25) !important;
+}
+
+.submenu-select {
+  max-width: 150px;
+}
+
+/* STILI BUTTON PERSONALIZZATI */
+.btn-outline-primary {
+  color: #F41F72;
+  border-color: #F41F72;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.btn-outline-primary:hover {
+  background-color: #F41F72;
+  color: white;
+}
+
+#openDialog {
+  background-color: #F41F72;
+  border-color: #F41F72;
+  color: white;
+}
+
+#openDialog:hover {
+  background-color: #d91964;
+  border-color: #d91964;
+}
+
+/* PREVIEW IMMAGINE */
+.preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.preview {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+/* FILE INPUT NASCOSTO */
+#fileInput {
+  position: absolute;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+}
+
+/* ANIMAZIONI */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.mat-toolbar-single-row {
+  height: auto !important;
+  background: transparent;
+  padding: 0;
+}

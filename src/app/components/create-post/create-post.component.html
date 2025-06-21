@@ -1,0 +1,93 @@
+<!--Check-->
+<app-navbar></app-navbar>
+
+<body>
+  <!-- Sfondo fisso con immagine -->
+  <div id="background-layer"></div>
+
+  <!-- Livello contenuto principale -->
+  <div id="content-layer">
+    <mat-card class="square">
+      <div class="container">
+
+        <!-- Titolo principale della pagina -->
+        <h1 class="scritta">Condividi la tua arte</h1>
+
+        <!-- Campo input per il titolo -->
+        <mat-form-field appearance="outline" color="accent">
+          <mat-label>Inserisci un titolo</mat-label>
+          <input
+            matInput #input2 maxlength="20"
+            class="custom-pink-outline"
+            placeholder="inserisci un titolo"
+            [(ngModel)]="title">
+          <mat-hint align="end">{{input2.value?.length || 0}}/20</mat-hint>
+        </mat-form-field>
+
+        <!-- Campo textarea per descrizione -->
+        <mat-form-field class="comment" appearance="outline" color="accent">
+          <mat-label>Inserisci una descrizione</mat-label>
+          <textarea
+            matInput
+            #input maxlength="200"
+            placeholder="Inserisci una descrizione"
+            [(ngModel)]="description"
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="3"
+            cdkAutosizeMaxRows="10">
+            </textarea>
+          <mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+        </mat-form-field>
+
+        <!-- Campo autocomplete per inserire un luogo -->
+        <mat-form-field appearance="outline" class="title" color="accent">
+          <mat-label>Inserisci un luogo</mat-label>
+          <input
+            type="text"
+            matInput
+            [formControl]="myControl"
+            [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+            <mat-option
+              *ngFor="let option of filteredOptions | async"
+              [value]="option">
+              {{ option.description }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <!-- Input per caricare immagine -->
+        <mat-form-field color="accent">
+          <div>
+            <mat-toolbar>
+              <input
+                matInput
+                [value]="selectedFileName ? selectedFileName : 'Seleziona immagine'"
+                style="font-size: 14px;" />
+            </mat-toolbar>
+            <input
+              type="file"
+              id="fileInput"
+              name="fileInput"
+              accept="image/*"
+              (change)="selectFile($event)" />
+          </div>
+        </mat-form-field>
+
+        <!-- Anteprima immagine selezionata -->
+        <div *ngIf="preview">
+          <h2>Anteprima immagine</h2>
+          <img [src]="preview" class="preview">
+        </div>
+
+        <!-- Pulsante per caricare il post -->
+        <button
+          type="button"
+          (click)="uploadPost()"
+          style="background-color: #F41F72; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; margin-top: 10px;">
+          Carica Post
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</body>

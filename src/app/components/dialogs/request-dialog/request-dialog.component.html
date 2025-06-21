@@ -1,0 +1,15 @@
+<!--Check-->
+<h2 mat-dialog-title>Diventa {{ roleName }}</h2>
+
+<mat-dialog-content>
+  <mat-form-field appearance="outline" color="accent" class="w-full">
+    <mat-label>Descrizione</mat-label>
+    <textarea matInput [(ngModel)]="requestDescription" rows="4"
+              placeholder="Descrivi perché vuoi diventare {{ roleName }}"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annulla</button>
+  <button mat-raised-button color="accent" (click)="onSubmit()">Manda richiesta</button>
+</mat-dialog-actions>

@@ -1,0 +1,293 @@
+<div class="container">
+  <!-- Card principale per visualizzare il forum -->
+  <div class="card w-75 custom-card fade-in">
+    <div class="card-body card-content-top">
+
+      <!-- HEADER: informazioni sull'autore e menu azioni -->
+      <div class="card-header-row">
+        <!-- Profilo autore con immagine e nome cliccabili -->
+        <div class="profile-header">
+          <a [routerLink]="['/edit-profile', author]" class="profile-link">
+            <img [src]="profileImage" alt="Profile Image" class="profile-image clickable">
+          </a>
+          <div class="profile-info">
+            <a [routerLink]="['/edit-profile', author]" class="username clickable">{{ author }}</a>
+            <span class="dot"></span>
+            <span class="publish-date-inline">{{ publishDate | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+
+        <!-- Bottone per aprire il menu delle azioni -->
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Azioni" class="custom-icon-button">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <!-- MENU AZIONI: modifica, elimina, segnala -->
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item [matMenuTriggerFor]="editMenu" *ngIf="loggedUserNickname == author">
+            <mat-icon>edit</mat-icon>
+            <span>Modifica</span>
+          </button>
+          <button mat-menu-item (click)="confirmDeleteForum(forumId)" *ngIf="loggedUserNickname == author || userRole === 'MODERATOR' || userRole === 'ADMIN'">
+            <mat-icon>delete</mat-icon>
+            <span>Elimina</span>
+          </button>
+          <button mat-menu-item (click)="reportForum(forumId)" *ngIf="loggedUserNickname != author">
+            <mat-icon>flag</mat-icon>
+            <span>Segnala</span>
+          </button>
+        </mat-menu>
+
+        <!-- MENU MODIFICA: titolo o descrizione -->
+        <mat-menu #editMenu="matMenu">
+          <button mat-menu-item (click)="startEditTitle()" *ngIf="loggedUserNickname == author">
+            <mat-icon>title</mat-icon>
+            <span>Modifica Titolo</span>
+          </button>
+          <button mat-menu-item (click)="startEditDescription()" *ngIf="loggedUserNickname == author">
+            <mat-icon>description</mat-icon>
+            <span>Modifica Descrizione</span>
+          </button>
+        </mat-menu>
+      </div>
+
+      <!-- TITOLO DEL FORUM -->
+      <div *ngIf="!isEditingTitle">
+        <h1 class="forum-title">{{ title }}</h1>
+      </div>
+      <!-- Modifica titolo -->
+      <div *ngIf="isEditingTitle" class="title-edit-wrapper">
+        <input matInput #title maxlength="100" [(ngModel)]="editedTitle" class="form-control"
+               placeholder="Modifica il titolo"/>
+        <mat-hint align="end">{{title.value.length}} / 100</mat-hint>
+        <div class="mt-2">
+          <button mat-button color="accent" (click)="saveTitleEdit()">Salva</button>
+          <button mat-button (click)="cancelTitleEdit()">Annulla</button>
+        </div>
+      </div>
+
+      <!-- DESCRIZIONE DEL FORUM -->
+      <div *ngIf="!isEditingDescription">
+        <p class="forum-description">{{ description }}</p>
+      </div>
+      <!-- Modifica descrizione -->
+      <div *ngIf="isEditingDescription" class="description-edit-wrapper">
+        <textarea matInput #message maxlength="256" [(ngModel)]="editedDescription" class="form-control" rows="3"
+                  placeholder="Modifica la descrizione"></textarea>
+        <mat-hint align="end">{{message.value.length}} / 256</mat-hint>
+        <div class="mt-2">
+          <button mat-button color="accent" (click)="saveDescriptionEdit()">Salva</button>
+          <button mat-button (click)="cancelDescriptionEdit()">Annulla</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMMAGINE DEL FORUM, se presente -->
+    <div class="card-image-wrapper" *ngIf="imageUrl">
+      <img [src]="imageUrl" alt="Immagine del post" class="forum-image-bottom">
+    </div>
+
+    <!-- FOOTER: commenti e follow -->
+    <div class="forum-image-footer footer-actions">
+      <div class="left-button">
+        <!-- Bottone per mostrare/nascondere i commenti -->
+        <button type="button" class="btn btn-light" (click)="toggleExpansion()">
+          <mat-icon>forum</mat-icon>
+          <span class="comment-counter">{{ comments.length }}</span>
+        </button>
+      </div>
+
+      <!-- Bottone "Segui" visibile solo se l'autore non è l'utente loggato -->
+      <div class="right-button" *ngIf="author != loggedUserNickname">
+        <button
+          type="button"
+          class="btn"
+          [ngClass]="isFollowing ? 'btn-toggled' : 'btn-primary'"
+          (click)="toggleFollow()">
+          {{ isFollowing ? 'Segui già' : 'Segui' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- COMMENTI ESPANDIBILI -->
+    <div *ngIf="isExpanded" class="expansion-content">
+
+      <!-- Campo per aggiungere un commento -->
+      <div class="input-container">
+        <img [src]="userProfilePic" alt="Profile" class="profile-image">
+        <div class="input-wrapper">
+          <input [(ngModel)]="commentText" type="text" class="round-input" placeholder="Scrivi un commento">
+          <button type="button" mat-raised-button color="accent" (click)="addComment()">Pubblica</button>
+        </div>
+      </div>
+
+      <!-- Ciclo su tutti i commenti -->
+      <div *ngFor="let comment of comments">
+        <div class="comment-card">
+
+          <!-- Header commento con utente e menu -->
+          <div class="comment-header-with-menu">
+            <div class="comment-header new-layout">
+              <a [routerLink]="['/edit-profile', comment.nickname]" class="profile-link">
+                <img [src]="comment.image || 'assets/persona.png'" alt="Profile" class="profile-image clickable">
+              </a>
+              <div class="inline-user-info">
+                <a [routerLink]="['/edit-profile', comment.nickname]" class="username clickable underline-on-click">
+                  {{ comment.nickname }}
+                </a>
+                <span class="dot"></span>
+                <span class="publish-date-inline">{{ comment.date | date:'dd/MM/yyyy HH:mm' }}</span>
+              </div>
+            </div>
+
+            <!-- Azioni sul commento -->
+            <div class="d-flex align-items-center gap-1">
+              <button mat-icon-button aria-label="Rispondi" (click)="toggleReply(comment)">
+                <mat-icon>reply</mat-icon>
+              </button>
+              <button mat-icon-button [matMenuTriggerFor]="commentMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
+
+            <!-- MENU commento -->
+            <mat-menu #commentMenu="matMenu">
+              <button mat-menu-item (click)="editComment(comment)" *ngIf="loggedUserNickname == comment.nickname">
+                <mat-icon>edit</mat-icon>
+                <span>Modifica</span>
+              </button>
+              <button mat-menu-item (click)="confirmDeleteComment(comment)" *ngIf="loggedUserNickname == comment.nickname || userRole == 'MODERATOR' || userRole == 'ADMIN'">
+                <mat-icon>delete</mat-icon>
+                <span>Elimina</span>
+              </button>
+              <button mat-menu-item (click)="reportComment(comment.idInteraction)" *ngIf="loggedUserNickname != comment.nickname" >
+                <mat-icon>flag</mat-icon>
+                <span>Segnala</span>
+              </button>
+            </mat-menu>
+          </div>
+
+          <!-- Corpo del commento -->
+          <div class="comment-content" *ngIf="editingComment !== comment">
+            {{ comment.description }}
+          </div>
+
+          <!-- Modifica commento -->
+          <div *ngIf="editingComment === comment">
+            <textarea [(ngModel)]="editingText" class="form-control" rows="2"></textarea>
+            <button mat-button color="accent" (click)="saveEditedComment()">Salva</button>
+            <button mat-button (click)="cancelEdit()">Annulla</button>
+          </div>
+
+          <!-- RISPOSTE ai commenti -->
+          <div class="replies-section" *ngIf="comment.getCommentRepliesResponseDTOList?.length">
+            <button mat-button color="accent" class="mt-2" (click)="toggleReplies(comment.idInteraction)">
+              {{ replyVisibility[comment.idInteraction] ? 'Nascondi risposte' : 'Visualizza risposte' }}
+            </button>
+
+            <div *ngIf="replyVisibility[comment.idInteraction]" class="nested-replies">
+              <ng-container *ngFor="let reply of comment.getCommentRepliesResponseDTOList">
+                <ng-container
+                  *ngTemplateOutlet="replyTemplate; context: { $implicit: reply, parent: comment }"></ng-container>
+              </ng-container>
+            </div>
+
+            <!-- TEMPLATE per risposte annidate -->
+            <ng-template #replyTemplate let-reply let-parent="parent">
+              <div class="reply-card">
+                <div class="comment-header-with-menu">
+                  <div class="comment-header new-layout">
+                    <a [routerLink]="['/edit-profile', reply.nickname]" class="profile-link">
+                      <img [src]="reply.image || 'assets/persona.png'" alt="Reply Profile"
+                           class="profile-image clickable">
+                    </a>
+                    <div class="inline-user-info">
+                      <a [routerLink]="['/edit-profile', reply.nickname]" class="username clickable underline-on-click">
+                        {{ reply.nickname }}
+                      </a>
+                      <span class="dot"></span>
+                      <span class="publish-date-inline">{{ reply.date | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-center gap-1">
+                    <button mat-icon-button aria-label="Rispondi" (click)="toggleReply(reply)">
+                      <mat-icon>reply</mat-icon>
+                    </button>
+                    <button mat-icon-button [matMenuTriggerFor]="replyMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                  </div>
+
+                  <!-- MENU risposte -->
+                  <mat-menu #replyMenu="matMenu">
+                    <button mat-menu-item (click)="editReply(reply, parent)" *ngIf="loggedUserNickname == reply.nickname">
+                      <mat-icon>edit</mat-icon>
+                      <span>Modifica</span>
+                    </button>
+                    <button mat-menu-item (click)="confirmDeleteReply(reply, parent)" *ngIf="loggedUserNickname == reply.nickname || userRole === 'MODERATOR' || userRole === 'ADMIN'">
+                      <mat-icon>delete</mat-icon>
+                      <span>Elimina</span>
+                    </button>
+                    <button mat-menu-item (click)="reportComment(reply.idInteraction)" *ngIf="loggedUserNickname != reply.nickname">
+                      <mat-icon>flag</mat-icon>
+                      <span>Segnala</span>
+                    </button>
+                  </mat-menu>
+                </div>
+
+                <!-- Contenuto o modifica della risposta -->
+                <div class="content-reply" *ngIf="editingReply !== reply">
+                  <p>{{ reply.description }}</p>
+                </div>
+                <div *ngIf="editingReply === reply">
+                  <textarea [(ngModel)]="editingReplyText" class="form-control" rows="2"></textarea>
+                  <button mat-button color="accent" class="btn-sm mt-1" (click)="saveEditedReply(parent)">Salva</button>
+                  <button mat-button class="btn-sm mt-1 ml-1" (click)="cancelEditReply()">Annulla</button>
+                </div>
+
+                <!-- Rispondere a una risposta -->
+                <div *ngIf="replyingTo?.idInteraction === reply.idInteraction" class="reply-section">
+                  <div class="reply-container">
+                    <img [src]="userProfilePic" alt="Profile" class="profile-image">
+                    <div class="input-wrapper">
+                      <textarea [(ngModel)]="replyText" class="form-control" rows="2"
+                                placeholder="Rispondi..."></textarea>
+                      <button mat-raised-button color="accent" (click)="replyToReply(reply)">Rispondi</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Risposte ricorsive -->
+                <div *ngIf="reply.getCommentRepliesResponseDTOList?.length > 0">
+                  <button mat-button color="accent" class="mt-2" (click)="toggleReplies(reply.idInteraction)">
+                    {{ replyVisibility[reply.idInteraction] ? 'Nascondi risposte' : 'Visualizza risposte' }}
+                  </button>
+                  <div *ngIf="replyVisibility[reply.idInteraction]" class="nested-replies">
+                    <ng-container *ngFor="let childReply of reply.getCommentRepliesResponseDTOList">
+                      <ng-container
+                        *ngTemplateOutlet="replyTemplate; context: { $implicit: childReply, parent: reply }"></ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+
+        </div>
+
+        <!-- Box di risposta visibile solo se attivo -->
+        <div *ngIf="replyingTo && replyingTo.idInteraction === comment.idInteraction" class="reply-card-separate">
+          <div class="reply-container">
+            <img [src]="userProfilePic" alt="Profile" class="profile-image">
+            <div class="input-wrapper">
+              <textarea [(ngModel)]="replyText" class="form-control" rows="2" placeholder="Rispondi..."></textarea>
+              <button mat-raised-button color="accent" (click)="submitReply(comment)">Rispondi</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

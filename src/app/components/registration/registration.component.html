@@ -1,0 +1,168 @@
+<!--Check-->
+<div *ngIf="!showAnimation">
+  <!-- componente globale e sfondo-->
+  <div class="background-container">
+
+    <!--Componente centrale-->
+    <div class="container main">
+
+      <!-- componente bianco al centro-->
+      <div class="fade-in row">
+
+        <!-- componente Immagine a sinistra-->
+        <div class="col-md-6 side-image">
+          <img class="w-100" src="../../../assets/logoregistrazione.png" alt="">
+          <!-- componente scritta nell'immagine a sinistra-->
+          <div class="text">
+            <p>Crea il tuo Account<i> - Unisciti a noi</i></p>
+          </div>
+        </div>
+
+        <!-- componente bianco parte destra-->
+        <div class="col-md-6 right">
+
+          <!-- Parte con gli input e bottone -->
+          <div class="input-box">
+
+            <mat-stepper  labelPosition="bottom" [linear]="true" #stepper color="accent">
+              <!--Step1-->
+              <mat-step [stepControl]="firstFormGroup" state="person" color="accent">
+                <form [formGroup]="firstFormGroup">
+                  <!-- inserisco il campo nome-->
+                  <mat-form-field class="w-100" appearance="outline" color="accent" style="margin-top: 5px;">
+                    <mat-label>Nome</mat-label>
+                    <input matInput placeholder="First name" formControlName="nome" required>
+                    <mat-error *ngIf="firstFormGroup.get('nome')?.hasError('required')">Inserisci il nome</mat-error>
+                  </mat-form-field>
+
+                  <!-- inserisco il campo cognome-->
+                  <mat-form-field class="w-100" appearance="outline" color="accent" style="margin-top: 5px;">
+                    <mat-label>Cognome</mat-label>
+                    <input matInput placeholder="Last name" formControlName="cognome" required>
+                    <mat-error *ngIf="firstFormGroup.get('cognome')?.hasError('required')">Inserisci il cognome
+                    </mat-error>
+                  </mat-form-field>
+
+                  <!-- inserisco il campo nickname-->
+                  <mat-form-field class="w-100" appearance="outline" color="accent" style="margin-top: 5px;">
+                    <mat-label>Nickname</mat-label>
+                    <input matInput placeholder="nickname" formControlName="nickname" required>
+                    <mat-error *ngIf="firstFormGroup.get('nickname')?.hasError('required')">Inserisci il nickname
+                    </mat-error>
+                  </mat-form-field>
+
+                  <!-- inserisco la data di nascita-->
+                  <mat-form-field appearance="outline" class="example-form-field" color="accent" style="margin-top: 5px; width: 200px">
+                    <mat-label>data di nascita</mat-label>
+                    <input matInput [matDatepicker]="datepicker" formControlName="dataDiNascita">
+                    <mat-error *ngIf="firstFormGroup.get('dataDiNascita')?.hasError('required')">Inserisci la data di
+                      nascita
+                    </mat-error>
+                    <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #datepicker color="accent">
+                      <mat-datepicker-actions>
+                        <button mat-button matDatepickerCancel>Cancella</button>
+                        <button mat-raised-button color="accent" matDatepickerApply>Conferma</button>
+                      </mat-datepicker-actions>
+                    </mat-datepicker>
+                  </mat-form-field>
+
+                  <!--bottone avanti e indietro-->
+                  <div>
+                    <button mat-flat-button color="accent" matStepperNext [disabled]="!firstFormGroup.valid">Avanti
+                    </button>
+                  </div>
+                </form>
+              </mat-step>
+
+              <!--Secondo Step-->
+              <mat-step [stepControl]="secondFormGroup" state="lock">
+                <form [formGroup]="secondFormGroup">
+                  <!-- inserisco il campo email-->
+                  <mat-form-field class="w-100" appearance="outline" color="accent" style="margin-top: 10px;">
+                    <mat-label>Email</mat-label>
+                    <input matInput placeholder="Inserisci l'email" formControlName="email" required>
+                    <mat-error *ngIf="secondFormGroup.get('email')?.hasError('required')">Inserisci l'email</mat-error>
+                    <mat-error *ngIf="secondFormGroup.get('email')?.hasError('email')">Formato email non valido
+                    </mat-error>
+                  </mat-form-field>
+
+                  <!-- inserisco il campo Password-->
+                  <mat-form-field class="w-100" appearance="outline" color="accent" style="margin-top: 10px;">
+                    <mat-label>Password</mat-label>
+                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Inserisci la password"
+                           formControlName="password" required>
+                    <mat-icon matIconSuffix (click)="hide=!hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                    <mat-error *ngIf="secondFormGroup.get('password')?.hasError('required')">La password è
+                      obbligatoria
+                    </mat-error>
+                  </mat-form-field>
+
+                  <!-- inserisco il campo Ripeti Password-->
+                  <mat-form-field class="w-100" appearance="outline" color="accent"  style="margin-top: 10px;">
+                    <mat-label>Ripeti Password</mat-label>
+                    <input matInput [type]="hideconfirm ? 'password' : 'text'"
+                           placeholder="Inserisci la password" formControlName="confermapassword" required>
+                    <mat-icon matIconSuffix
+                              (click)="hideconfirm=!hideconfirm">{{hideconfirm ? 'visibility' : 'visibility_off'}}</mat-icon>
+                    <mat-error *ngIf="secondFormGroup.get('confermapassword')?.hasError('required')">Devi ripetere la
+                      password
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-error
+                    *ngIf="secondFormGroup.hasError('passwordsDoNotMatch') && secondFormGroup.get('confermapassword')?.touched">
+                    Le password non coincidono
+                  </mat-error>
+
+
+                  <!--Bottone avanti e indietro-->
+                  <div>
+                    <button mat-flat-button color="accent" matStepperPrevious>Indietro</button>
+                    <button mat-flat-button color="accent" matStepperNext [disabled]="!secondFormGroup.valid">Avanti
+                    </button>
+                  </div>
+                </form>
+              </mat-step>
+
+              <!--Terzo step-->
+              <!-- Terzo step -->
+              <mat-step state="brush" color="accent">
+                <form [formGroup]="thirdFormGroup" (ngSubmit)="registraUtente()">
+                  <!-- Domanda se iscriverti come artista -->
+                  <h1>Desideri iscriverti come artista?</h1>
+
+                  <!-- Radio per la scelta -->
+                  <mat-radio-group formControlName="role">
+                    <mat-radio-button value="artist" class="example-margin">Sì</mat-radio-button>
+                    <mat-radio-button value="notArtist" class="example-margin">No</mat-radio-button>
+                  </mat-radio-group>
+
+                  <!-- Bottoni affiancati con separatore -->
+                  <div class="d-flex align-items-center gap-2 mt-4">
+                    <button mat-flat-button color="accent" matStepperPrevious>Indietro</button>
+                    <span class="separator">|</span>
+                    <button mat-flat-button color="warn" type="submit" [disabled]="!thirdFormGroup.valid">Conferma</button>
+                  </div>
+                </form>
+              </mat-step>
+
+              <!--STEP FINALE-->
+              <mat-step state="thumb_up">
+                <p>COMPLIMENTI!</p>
+              </mat-step>
+            </mat-stepper>
+            <div class="text-center">
+              <span>Se hai già un account?
+                <a (click)="navigateToLogin($event)">Entra</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showAnimation" class="d-flex justify-content-center align-content-center">
+  <ng-lottie class="lottie" [options]="lottieConfigLoading" width="60" height="60"></ng-lottie>
+</div>

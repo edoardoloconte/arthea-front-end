@@ -1,0 +1,178 @@
+<!--Check-->
+<div class="comment-section">
+  <div class="container">
+
+    <!-- Info utente (immagine + nickname con link al profilo) -->
+    <div class="comment-user">
+      <img
+        [src]="user.image"
+        class="user-icon"
+        alt="User Icon"
+        routerLink="/edit-profile"
+        style="cursor: pointer;" />
+      <span
+        class="username"
+        routerLink="/edit-profile"
+        style="cursor: pointer;">
+        @{{ user.nickname }}
+      </span>
+    </div>
+
+    <!-- Textarea per nuovo commento -->
+    <div class="form-floating">
+      <textarea
+        [(ngModel)]="commentText"
+        class="form-control custom-textarea"
+        placeholder="Scrivi un commento..."
+        id="floatingTextarea2"
+        style="height: 150px; width: 100%;"
+      ></textarea>
+    </div>
+
+    <!-- Bottone invio commento -->
+    <button
+      mat-raised-button
+      color="accent"
+      class="btn-sm mt-2 d-block ms-auto"
+      (click)="addComment()">
+      Commenta
+    </button>
+  </div>
+
+  <!-- Messaggio di caricamento -->
+  <div *ngIf="loading" class="loading">Caricamento commenti...</div>
+
+  <!-- Lista commenti  -->
+  <div id="comments-container">
+    <ng-container *ngFor="let comment of comments">
+      <div class="comment-thread">
+        <ng-container
+          *ngTemplateOutlet="commentTemplate; context: { $implicit: comment, parentNickname: null, level: 0 }">
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+
+  <!--Template commenti + risposte -->
+  <ng-template #commentTemplate let-comment let-parentNickname="parentNickname" let-level="level">
+
+    <!-- === Singolo Commento (livello indentazione) === -->
+    <div
+      class="comment"
+      [ngClass]="{ 'comment-fade-in': level === 0 }"
+      [ngStyle]="{ 'margin-left.px': level * 30 }">
+
+      <div class="comment-header d-flex justify-content-between align-items-center">
+        <div class="comment-user d-flex align-items-center">
+          <img
+            [src]="comment.image"
+            class="user-icon"
+            routerLink="/edit-profile"
+            style="cursor: pointer;"
+            alt="User Icon" />
+          <span class="username">@{{ comment.nickname }}</span>
+          <div class="comment-timestamp ms-2 text-muted" style="margin-bottom: 10px;">
+            {{ comment.date | date: 'short' }}
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-1">
+          <button
+            mat-icon-button
+            (click)="replyToComment(comment.idInteraction)"
+            aria-label="Rispondi">
+            <mat-icon>reply</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            aria-label="Azioni commento">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu azioni -->
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="openReportModal(comment.idInteraction, false)">
+          <mat-icon>flag</mat-icon>
+          <span>Segnala commento</span>
+        </button>
+        <button *ngIf="comment.nickname == user.nickname" mat-menu-item (click)="editComment(comment)">
+          <mat-icon>create</mat-icon>
+          <span>Modifica</span>
+        </button>
+        <button *ngIf="comment.nickname == user.nickname || user.role === 'MODERATOR'" mat-menu-item (click)="confirmDeleteComment(comment)">
+          <mat-icon>delete</mat-icon>
+          <span>Elimina</span>
+        </button>
+      </mat-menu>
+
+      <div *ngIf="parentNickname" style="font-style: italic; color:blue; margin-bottom: 4px;">
+        Risposta a @{{ parentNickname }}
+      </div>
+
+      <!-- Modalità Modifica -->
+      <div *ngIf="editingComment?.idInteraction === comment.idInteraction">
+        <textarea
+          [(ngModel)]="editingComment.description"
+          class="form-control custom-textarea"
+          rows="3"></textarea>
+        <button
+          mat-raised-button
+          color="accent"
+          class="btn-sm mt-2 d-block ms-auto"
+          (click)="saveComment(comment)">
+          Salva
+        </button>
+      </div>
+
+      <div *ngIf="editingComment?.idInteraction !== comment.idInteraction">
+        <div class="comment-text">{{ comment.description }}</div>
+      </div>
+
+      <!--Bottone nascondi / mostra commento-->
+      <button
+        *ngIf="comment.getCommentRepliesResponseDTOList?.length > 0"
+        mat-button
+        color="accent"
+        class="mt-2"
+        (click)="toggleReplies(comment.idInteraction)">
+        {{ areRepliesVisible(comment.idInteraction) ? 'Nascondi risposte' : ' Visualizza risposte' }}
+      </button>
+    </div>
+
+    <!--Form risposta ai commenti -->
+    <div
+      *ngIf="replyingToCommentId === comment.idInteraction"
+      class="comment mt-2"
+      [ngStyle]="{ 'margin-left.px': (level + 1) * 30 }">
+      <textarea
+        [(ngModel)]="replyTexts[comment.idInteraction]"
+        class="form-control custom-textarea"
+        placeholder="Scrivi la tua risposta..."
+        rows="3">
+      </textarea>
+      <button
+        mat-raised-button
+        color="accent"
+        class="btn-sm mt-2 d-block ms-auto"
+        (click)="addReply(comment.idInteraction)">
+        Rispondi
+      </button>
+    </div>
+
+    <!-- Risposte nidificate  -->
+    <div *ngIf="comment.getCommentRepliesResponseDTOList?.length">
+      <div *ngIf="areRepliesVisible(comment.idInteraction)">
+        <ng-container *ngFor="let reply of comment.getCommentRepliesResponseDTOList; let i = index">
+          <div class="reply-fade-in" [style.animationDelay.ms]="i * 150">
+            <ng-container
+              *ngTemplateOutlet="commentTemplate; context: { $implicit: reply, parentNickname: comment.nickname, level: level + 1 }">
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>
+</div>

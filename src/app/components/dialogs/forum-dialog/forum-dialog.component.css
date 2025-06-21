@@ -1,0 +1,35 @@
+.full-width {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="file"] {
+  display: block;
+  margin: 12px 0;
+  width: 100%;
+}
+
+input[matInput][readonly] {
+  cursor: pointer;
+}
+
+.preview-container {
+  margin-top: 16px;
+  width: 100%;
+  text-align: center;
+}
+
+.preview-container img.preview {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+mat-form-field input[readonly] {
+  cursor: pointer;
+}
+
+button[mat-icon-button] {
+  cursor: pointer;
+}

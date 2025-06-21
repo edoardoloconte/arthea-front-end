@@ -1,0 +1,157 @@
+<!--Check-->
+<app-navbar></app-navbar>
+
+<div class="background-container">
+  <div class="fade-in content-wrapper">
+
+    <div class="intro">
+      <div class="title-container">
+        <h1 *ngIf="!isEditingTitle" class="title">
+          {{ post.title }}
+        </h1>
+        <input *ngIf="isEditingTitle" [(ngModel)]="newTitle" class="title-input" maxlength="40">
+        <mat-icon matTooltip="Modifica Titolo" *ngIf="isAuthor" (click)="editTitle()">
+          {{ isEditingTitle ? 'check' : 'edit' }}
+        </mat-icon>
+      </div>
+    </div>
+
+    <!-- SLIDER sostituito con l'immagine del post responsive -->
+    <div class="main-container fade-child delay-1">
+      <div class="carousel-container">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img [src]="post.image" class="d-block w-100 responsive-image" alt="Post Image">
+          </div>
+        </div>
+      </div>
+
+      <!-- Card accanto al carosello -->
+      <div class="card-container ">
+        <div class="card border-dark mb-3 custom-card">
+          <div class="card-body text-dark">
+            <div class="profile-info">
+              <img
+                [src]="post.profilePicUser"
+                alt="Profile Image"
+                class="profile-img"
+                style="cursor: pointer"
+                [routerLink]="['/edit-profile', post.idUser]"
+              />
+
+              <p
+                class="nickname hover-underline"
+                [routerLink]="['/edit-profile', post.idUser]"
+                style="cursor: pointer"
+              >
+
+                @{{ post.nameUser }}
+              </p>
+            </div>
+
+            <div class="custom-card-header">
+              <div class="likes">
+                <mat-icon class="like-icon" (click)="toggleLike()">
+                  {{ hasLiked ? 'favorite' : 'favorite_border' }}
+                </mat-icon>
+                <span>{{ likeCount }}</span>
+              </div>
+              <button mat-icon-button [matMenuTriggerFor]="postMenu" aria-label="Menu Post">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #postMenu="matMenu">
+                <button mat-menu-item (click)="openReportModalForPost()">
+                  <mat-icon>flag</mat-icon>
+                  <span>Segnala</span>
+                </button>
+                <button *ngIf="Number(idUser) == post.idUser || userRole === 'MODERATOR'" mat-menu-item (click)="confirmDeletePost()">
+                  <mat-icon>delete</mat-icon>
+                  <span>Elimina</span>
+                </button>
+              </mat-menu>
+            </div>
+
+            <div *ngIf="isConfirmingDelete" class="confirm-delete">
+              <div class="confirm-delete-dialog">
+                <p>Vuoi eliminare definitivamente questo post?</p>
+                <button class="btn btn-danger" (click)="deletePost()">Sì, Elimina</button>
+              </div>
+            </div>
+            <div class="location">
+              <mat-icon class="pin">location_on</mat-icon>
+              <h3 class="card-title">{{post.descriptionLocation}}</h3>
+            </div>
+            <div class="image-container">
+              <div class="post-card">
+
+                <div class="average-review-wrapper">
+                  <div class="average-review-container">
+                    <div class="star-container">
+                      <mat-icon class="star-icon" *ngIf="averageReview >= 4" color="warn">star</mat-icon>
+                      <mat-icon class="star-icon" *ngIf="averageReview >= 2 && averageReview < 4" color="accent">
+                        star_half
+                      </mat-icon>
+                      <mat-icon class="star-icon" *ngIf="averageReview < 2" color="primary">star_outline</mat-icon>
+                    </div>
+                    <div class="review-text">
+                      {{ averageReview.toFixed(1) }}/5
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Descrizione sotto il carosello -->
+    <div class="description fade-child delay-2">
+      <div class="description-header" style="display: flex; align-items: center; gap: 8px;">
+        <h2 style="margin: 0;">
+          <mat-icon class="icon-spacing">description</mat-icon>
+          Descrizione
+        </h2>
+        <button *ngIf="isAuthor" mat-icon-button aria-label="Modifica Descrizione" (click)="editDescription()">
+          <mat-icon matTooltip="Modifica Descrizione">edit</mat-icon>
+        </button>
+      </div>
+
+      <div *ngIf="isEditing; else showParagraph">
+        <div class="edit-area">
+        <textarea [(ngModel)]="newDescription" class="form-control custom-textarea"
+                  rows="4" style="width: 100%; " maxlength="200"></textarea>
+          <div class="edit-actions">
+            <button type="button" class="btn mt-3 d-block ms-auto"
+                    style="background-color: #F41F72; border-color: #F41F72; color: white;"
+                    (click)="confirmEdit()">Conferma
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #showParagraph>
+        <p #descriptionRef
+           [class.fade-in-on-scroll]="true"
+           [class.visible]="isDescriptionVisible"
+           [class.fade-in]="fadeInDescription">
+          {{ post.description }}
+        </p>
+      </ng-template>
+    </div>
+
+    <h2 class="description-header-title fade-child delay-3">
+      <mat-icon class="icon-spacing">reviews</mat-icon>
+      Recensioni
+    </h2>
+    <app-review class="fade-child delay-4"  (reviewAdded)="onReviewAdded()" [loggedInUserId]="nicknameUser"></app-review>
+
+    <h2 class="description-header-title fade-child delay-5">
+      <mat-icon aria-hidden="false" aria-label="Icona commenti" class="icon-spacing">comment</mat-icon>
+      Commenti
+    </h2>
+    <app-comments class="fade-child delay-5"></app-comments>
+  </div>
+</div>
+<app-footer></app-footer>

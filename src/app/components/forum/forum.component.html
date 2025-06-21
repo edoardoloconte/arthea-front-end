@@ -1,0 +1,62 @@
+<!--Check-->
+<app-navbar></app-navbar>
+
+<div class="background-wrapper">
+
+  <!-- Barra di ricerca e pulsante "Crea Forum" -->
+  <div class="search-bar-wrapper fade-in">
+
+    <!-- Pulsante visibile solo agli ARTIST -->
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="openDialog()"
+      *ngIf="userLogged.role == 'ARTIST'">
+      + Crea Forum
+    </button>
+
+    <!-- Campo di ricerca + filtro -->
+    <div class="input-group search-input-group">
+
+      <!-- Input per cercare -->
+      <input
+        class="form-control search-input"
+        type="search"
+        placeholder="Cerca il post o artista"
+        aria-label="Search"
+        [(ngModel)]="searchQuery">
+
+      <!-- Select per scegliere tra artista o forum -->
+      <select class="form-select submenu-select" [(ngModel)]="selectedSearchType">
+        <option value="1">Artista</option>
+        <option value="2">Forum</option>
+      </select>
+
+      <!-- Bottone per avviare la ricerca -->
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="searchForums()">
+        Cerca
+      </button>
+
+    </div>
+  </div>
+
+  <div *ngIf="forums.length > 0" class="forum-list" style="margin: 60px;">
+    <app-forum-post
+      *ngFor="let forum of forums"
+      [title]="forum.title"
+      [description]="forum.description"
+      [imageUrl]="forum.image"
+      [forumId]="forum.idForum"
+      [author]="forum.nameArtist"
+      [publishDate]="forum.date"
+      [profileImage]="forum.profilePicArtist"
+      [comments]="forum.comments"
+      [id]="'forum-' + forum.idForum"
+    ></app-forum-post>
+  </div>
+</div>
+
+<app-footer></app-footer>

@@ -1,0 +1,42 @@
+<!-- Check -->
+<h2 mat-dialog-title>Cambia Password</h2>
+
+<mat-dialog-content>
+  <!-- Password Attuale -->
+  <mat-form-field appearance="outline" color="accent" class="w-full">
+    <mat-label>Password attuale</mat-label>
+    <input matInput [type]="hideOldPassword ? 'password' : 'text'" [(ngModel)]="oldPassword">
+    <button mat-icon-button matSuffix (click)="hideOldPassword = !hideOldPassword">
+      <mat-icon>{{ hideOldPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <!-- Nuova Password -->
+  <mat-form-field appearance="outline" color="accent" class="w-full">
+    <mat-label>Nuova password</mat-label>
+    <input matInput [type]="hideNewPassword ? 'password' : 'text'" [(ngModel)]="newPassword"
+           (ngModelChange)="checkPasswordMatch()">
+    <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword">
+      <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <!-- Conferma Password -->
+  <mat-form-field appearance="outline" color="accent" class="w-full">
+    <mat-label>Ripeti password</mat-label>
+    <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" [(ngModel)]="confirmPassword"
+           (ngModelChange)="checkPasswordMatch()">
+    <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
+      <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-error *ngIf="!passwordsMatch">
+    Le password non coincidono!
+  </mat-error>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Annulla</button>
+  <button mat-raised-button color="accent" [disabled]="!passwordsMatch" (click)="submit()">Salva</button>
+</mat-dialog-actions>

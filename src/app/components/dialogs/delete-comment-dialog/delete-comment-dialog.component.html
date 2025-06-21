@@ -1,0 +1,21 @@
+<!--Check-->
+<h2 mat-dialog-title>Conferma eliminazione</h2>
+
+<mat-dialog-content>
+  <p>
+    Sei sicuro di voler eliminare
+    <strong>
+      {{
+      data.type === 'post' ? 'questo post' :
+        data.type === 'comment' ? 'questo commento' :
+          data.type === 'review' ? 'questa recensione' :
+              data.type === 'forum' ? 'questo forum' : 'questo elemento'
+      }}
+    </strong>?
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annulla</button>
+  <button mat-button color="warn" (click)="onConfirm()">Elimina</button>
+</mat-dialog-actions>

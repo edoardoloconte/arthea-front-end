@@ -1,0 +1,181 @@
+*:not(mat-icon) {
+  font-family: 'Poppins', sans-serif;
+}
+
+header {
+  font-family: 'Knewave', cursive;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 50px;
+}
+
+.wrapper {
+  background-image: url('src/app/media/sfondo1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  padding: 0 20px 0 20px;
+}
+
+/*Compoenente centrale*/
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/*immagine di sinistra*/
+.side-image {
+  background-image: url("src/app/media/sfondo2.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 50px;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/*componente bianco al centro*/
+.row {
+  width: 900px;
+  height: 550px;
+  border-radius: 10px;
+  background: #fff;
+  padding: 0px;
+  box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, 0.2);
+}
+
+.text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.text p {
+  color: #fff;
+  font-size: 20px;
+}
+
+i {
+  font-weight: 400;
+  font-size: 15px;
+}
+
+/*Componente bianco parte destra*/
+.right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/*Parte di destra con gli input*/
+.input-box {
+  width: 330px;
+  box-sizing: border-box;
+}
+
+.input-box header {
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+/*Elemento dei bottoni a destra (email,pw,bottone entra)*/
+.input-field {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 0 10px 0 10px;
+}
+
+/*Pulsante Entra*/
+.submit {
+  border: none;
+  outline: none;
+  height: 45px;
+  background: #ececec;
+  border-radius: 5px;
+  transition: .4s;
+}
+
+.submit:hover {
+  background: #F41F72;
+  color: #fff;
+}
+
+.signin {
+  text-align: center;
+  font-size: small;
+  margin-top: 25px;
+}
+
+span a {
+  text-decoration: none;
+  font-weight: 700;
+  color: #000;
+  transition: .5s;
+  cursor: pointer;
+
+}
+
+span a:hover {
+  text-decoration: underline;
+  color: #000;
+}
+
+@media only screen and (max-width: 768px) {
+  .side-image {
+    border-radius: 10px 10px 0 0;
+  }
+
+  img {
+    width: 35px;
+    position: absolute;
+    top: 20px;
+    left: 47%;
+  }
+
+  .text {
+    position: absolute;
+    top: 70%;
+    text-align: center;
+  }
+
+  .text p, i {
+    font-size: 16px;
+  }
+
+  .row {
+    max-width: 420px;
+    width: 100%;
+  }
+}
+
+.lottie {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25rem;
+  height: 25rem;
+  margin: 0 auto;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px); /* parte 20px sotto */
+  animation: fadeInUp 0.9s ease forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0); /* torna alla posizione normale */
+  }
+}

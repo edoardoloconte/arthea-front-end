@@ -1,0 +1,62 @@
+<!--Check-->
+<div *ngIf="!showAnimation">
+  <div class="wrapper">
+
+    <!--Componente centrale-->
+    <div class="container main">
+
+      <!-- componente bianco al centro-->
+      <div class="fade-in row">
+
+        <!-- componente Immagine a sinistra-->
+        <div class="col-md-6 side-image">
+
+          <!-- componente scritta nell'immagine a sinistra-->
+          <div class="text">
+            <p>La <i>community</i> di artisti</p>
+          </div>
+        </div>
+
+        <!-- componente bianco parte destra-->
+        <div class="col-md-6 right">
+
+          <div class="input-box">
+
+            <header>BENVENUTO</header>
+
+            <!-- Input EMAIL-->
+            <mat-form-field class="input-field" appearance="outline" color="accent">
+              <mat-label>Inserisci la mail</mat-label>
+              <input type="email" matInput [(ngModel)]="email" placeholder="inserisci email" id="email">
+            </mat-form-field>
+
+            <!-- Input Password-->
+            <mat-form-field class="input-field" appearance="outline" color="accent">
+              <mat-label>Inserisci la password</mat-label>
+              <input matInput [(ngModel)]="password" [type]="hide ? 'password' : 'text'" id="password">
+              <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                      [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <div class="input-field">
+              <input type="button" class="submit" value="ENTRA" (click)="onLogin($event)">
+            </div>
+
+            <!-- Form di login -->
+            <div class="signin">
+              <span>Non hai ancora un account?
+                <a (click)="navigateToRegistration($event)">Iscriviti</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showAnimation" class="d-flex justify-content-center align-content-center">
+  <ng-lottie class="lottie" [options]="lottieConfigLoading" width="60" height="60"></ng-lottie>
+</div>

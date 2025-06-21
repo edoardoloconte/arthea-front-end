@@ -1,0 +1,65 @@
+<!--Check-->
+<app-navbar></app-navbar>
+<div class="slider">
+    <!-- Lista degli elementi dello slider -->
+    <div class="list">
+
+      <!--Link alla creazione di post -->
+      <div class="item">
+        <img src="assets/immagine1.jpg" alt="">
+        <div class="caption">
+          <a [routerLink]="['/create-post']" class="caption-text">
+            Condividi le tue creazioni con la community
+          </a>
+        </div>
+      </div>
+
+      <!-- Link al forum -->
+      <div class="item">
+        <img src="assets/immagine%202.jpg" alt="">
+        <div class="caption">
+          <a [routerLink]="['/forum']" class="caption-text">
+            Partecipa alle discussioni e scambia idee
+          </a>
+        </div>
+      </div>
+
+      <!-- Link alle ultime pubblicazioni -->
+      <div class="item">
+        <img src="assets/immagine3.jpg" alt="">
+        <div class="caption">
+          <a [routerLink]="['/post-list']" class="caption-text">
+            Scopri le ultime opere pubblicate
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Pulsanti per lo scorrimento dello slider -->
+    <div>
+      <button id="prev"></button>
+      <button id="next"></button>
+    </div>
+
+    <!-- Indicatori di posizione dello slider -->
+    <ul class="dots">
+      <li class="active"></li>
+      <li></li>
+      <li></li>
+    </ul>
+
+</div>
+
+<h1 #title class="title fade-in-scroll">ULTIME OPERE PUBBLICATE</h1>
+<p #subtitle class="sub_title fade-in-scroll">Scopri le ultime opere pubblicate</p>
+
+<!-- Componente per mostrare le card con le ultime opere -->
+<app-card-slider [context]="'home'"></app-card-slider>
+
+<div class="container">
+  <div class="box box1" #box1 [routerLink]="['/forum']"></div>
+  <div class="box box2" #box2 [routerLink]="['/post-list']"></div>
+</div>
+
+<app-footer></app-footer>

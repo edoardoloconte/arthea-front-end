@@ -1,0 +1,48 @@
+<!-- check -->
+<div *ngIf="noPosts">
+  <p>Non ci sono Post pubblicati</p>
+</div>
+
+<div id="carouselWrapper">
+  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+
+    <!-- Wrapper delle slide del carosello -->
+    <div class="carousel-inner mt-3">
+      <div
+        *ngFor="let chunk of posts; let i = index"
+        class="carousel-item"
+        [ngClass]="{'active': i === 0}">
+
+        <div class="d-flex justify-content-center">
+          <!-- Ogni chunk rappresenta un gruppo di card in una singola slide -->
+          <app-card
+            *ngFor="let post of chunk; let j = index"
+            [post]="post"
+            [ngClass]="inView ? 'fade-slide-in delay-' + j : ''">
+          </app-card>
+        </div>
+      </div>
+    </div>
+
+    <button
+      *ngIf="showPrev"
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExample"
+      data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+
+    <button
+      *ngIf="showNext"
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselExample"
+      data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<!--Check-->
+<div class="card forum-card" [id]="'forum-' + forum.idForum" (click)="goToForum(forum.idForum)">
+  <img *ngIf="forum.image" [src]="forum.image" alt="Immagine forum" class="card-img-top" />
+
+  <div class="card-body">
+    <div class="title-container">
+      <a [routerLink]="['/edit-profile']" (click)="$event.stopPropagation()">
+        <img [src]="forum.profilePicArtist" alt="Artista" class="profile-img" *ngIf="forum.image">
+      </a>
+
+      <div>
+        <h5 class="card-title">{{ forum.title }}</h5>
+      </div>
+    </div>
+
+    <p>{{ forum.description.length > 100 ? (forum.description | slice:0:100) + '...' : forum.description }}</p>
+
+    <div class="mt-auto d-flex justify-content-end">
+      <small class="text-muted">{{ forum.date | date: 'dd/MM/yyyy' }}</small>
+    </div>
+  </div>
+</div>
