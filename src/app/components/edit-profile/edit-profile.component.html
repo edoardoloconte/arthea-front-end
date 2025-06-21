@@ -5,12 +5,12 @@
   <div class="fade-in container">
 
     <div class="menu-container">
-      <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" *ngIf="!isOwnProfile && userRole == 'ADMIN' ">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #userMenu="matMenu">
 
-        <button mat-menu-item (click)="toggleAccountStatus()" *ngIf="!isOwnProfile">
+        <button mat-menu-item (click)="toggleAccountStatus()" *ngIf="!isOwnProfile && userRole == 'ADMIN'">
           <mat-icon>{{ isAccountDisabled ? 'refresh' : 'person_remove' }}</mat-icon>
           {{ isAccountDisabled ? 'Riabilita Account' : 'Disabilita Account' }}
         </button>
@@ -77,7 +77,7 @@
         class="follow-btn fade-child delay-4"
         [ngClass]="{ 'followed': isFollowing }"
         (click)="toggleFollow()"
-        *ngIf="!isOwnProfile"
+        *ngIf="!isOwnProfile || userRole == 'ARTIST'"
       >
         {{ isFollowing ? 'Segui già' : 'Segui' }}
       </button>

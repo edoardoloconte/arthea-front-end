@@ -153,6 +153,7 @@ export class ReviewComponent implements OnInit {
         this.editingIndex = null;
         this.loadReviews();
         this.showSnackBar('Recensione aggiornata con successo!');
+        this.reviewAdded.emit();
       },
       error => {
         console.error('Errore nella modifica della recensione:', error);
