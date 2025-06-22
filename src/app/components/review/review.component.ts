@@ -19,20 +19,21 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ReviewComponent implements OnInit {
 
+  // Accesso diretto al contenitore dei commenti nel DOM
   @ViewChild('commentsContainer') commentsContainer!: ElementRef;
 
+  // Input da componente padre: ID dell’utente loggato
   @Input() loggedInUserId!: string;
+
+  // Evento emesso quando una recensione viene aggiunta
   @Output() reviewAdded = new EventEmitter<void>();
 
-
-  // Proprietà per la gestione delle recensioni
   reviews: GetReviewsResponseDTO[] = [];
   reviewText: string = '';
   rating: number = 0;
   editingIndex: number | null = null;
   stars = Array(5).fill(0);
   postId!: number;
-
   user!: GetAllUserResponseDTO;
   isInserted: boolean = false;
   reviewTitles: { [idReview: number]: string } = {};
@@ -48,12 +49,11 @@ export class ReviewComponent implements OnInit {
     private snackBar: MatSnackBar,
   ) {}
 
-  /* --- Ciclo di vita componente --- */
   ngOnInit(): void {
     this.postId = history.state.idPost;
     const idUser = this.authService.getIdUser();
 
-    // Recupero dati utente loggato
+    // Se l’utente è autenticato, carica i suoi dati
     if (idUser) {
       this.authService.getUserData(idUser).subscribe(
         data => {
@@ -67,7 +67,7 @@ export class ReviewComponent implements OnInit {
       );
     }
 
-    // Carico recensioni se postId presente
+    // Se presente un postId valido, carica le recensioni e verifica se l’utente ha già recensito
     if (this.postId) {
       this.loadReviews();
       this.postService.isReviewed(this.postId).subscribe(
@@ -77,6 +77,7 @@ export class ReviewComponent implements OnInit {
     }
   }
 
+  // Carica tutte le recensioni associate al post corrente
   loadReviews(): void {
     this.reviewService.getReviews(this.postId).subscribe(
       data => this.reviews = data,
@@ -84,11 +85,14 @@ export class ReviewComponent implements OnInit {
     );
   }
 
+  // Gestisce il click su una stella per selezionare la valutazione
   rate(starIndex: number): void {
     this.rating = starIndex;
   }
 
+  // Aggiunge una nuova recensione tramite il servizio
   addReview(): void {
+    // Controllo base validità rating e testo
     if (this.rating === 0) {
       this.showSnackBar('Seleziona almeno una stella!');
       return;
@@ -99,6 +103,7 @@ export class ReviewComponent implements OnInit {
       return;
     }
 
+    // Prepara la richiesta con dati della recensione
     const request: AddReviewPostRequestDTO = {
       idPost: this.postId,
       description: this.reviewText.trim(),
@@ -106,12 +111,14 @@ export class ReviewComponent implements OnInit {
       title: this.reviewTitle,
     };
 
+    // Invio richiesta di aggiunta recensione
     this.reviewService.addReview(request).subscribe(
       () => {
+        // Resetta il form dopo successo
         this.resetReviewForm();
         this.isInserted = true;
 
-        // Ricarico le recensioni aggiornate
+        // Ricarica le recensioni aggiornate e aggiorna i titoli
         this.reviewService.getReviews(this.postId).subscribe(
           data => {
             this.reviews = data;
@@ -135,6 +142,7 @@ export class ReviewComponent implements OnInit {
     );
   }
 
+  // Aggiorna la descrizione di una recensione esistente
   updateReview(index: number): void {
     const review = this.reviews[index];
 
@@ -143,11 +151,13 @@ export class ReviewComponent implements OnInit {
       return;
     }
 
+    // Prepara la richiesta per aggiornare la descrizione
     const request: ChangeReviewDescriptionRequestDTO = {
       idInteraction: review.idReview,
       newDescription: review.description.trim()
     };
 
+    // Invio richiesta di aggiornamento
     this.reviewService.updateReviewDescription(request).subscribe(
       () => {
         this.editingIndex = null;
@@ -162,6 +172,7 @@ export class ReviewComponent implements OnInit {
     );
   }
 
+  // Aggiorna il rating di una recensione esistente
   updateRating(index: number, newRating: number): void {
     const review = this.reviews[index];
     const request: ChangeReviewRatingRequestDTO = {
@@ -181,7 +192,7 @@ export class ReviewComponent implements OnInit {
     );
   }
 
-
+  // Mostra dialog di conferma prima di eliminare una recensione
   confirmDeleteReview(index: number): void {
     const dialogRef = this.dialog.open(DeleteCommentDialogComponent, {
       width: '400px',
@@ -198,6 +209,7 @@ export class ReviewComponent implements OnInit {
     });
   }
 
+  // Elimina la recensione selezionata tramite il servizio
   deleteReview(index: number): void {
     const reviewId = this.reviews[index].idReview;
     this.interactionService.deleteInteraction(reviewId).subscribe(
@@ -213,12 +225,14 @@ export class ReviewComponent implements OnInit {
     );
   }
 
+  // Resetta i campi del form recensione dopo inserimento o reset
   private resetReviewForm(): void {
     this.reviewText = '';
     this.reviewTitle = '';
     this.rating = 0;
   }
 
+  // Mostra una notifica a comparsa (Snackbar) con il messaggio passato
   private showSnackBar(message: string): void {
     this.snackBar.open(message, 'Chiudi', {
       duration: 3000,
@@ -226,6 +240,4 @@ export class ReviewComponent implements OnInit {
       verticalPosition: 'bottom'
     });
   }
-
-
 }

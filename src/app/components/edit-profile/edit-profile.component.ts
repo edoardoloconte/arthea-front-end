@@ -1,21 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
-import { HttpClient } from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
+import {HttpClient} from '@angular/common/http';
 
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
 
-import { RequestDialogComponent } from 'src/app/components/dialogs/request-dialog/request-dialog.component';
-import { ChangePwDialogComponent } from "src/app/components/dialogs/change-pw-dialog/change-pw-dialog.component";
+import {RequestDialogComponent} from 'src/app/components/dialogs/request-dialog/request-dialog.component';
+import {ChangePwDialogComponent} from "src/app/components/dialogs/change-pw-dialog/change-pw-dialog.component";
 
-import { AuthService } from "../../services/auth.service";
-import { UserService } from "../../services/user-service";
-import { RequestService } from "../../services/request.service";
-import { ChangePasswordRequestDTO } from "../../DTO/request/ChangePasswordRequestDTO";
-import { AddRequestRequestDTO } from "../../DTO/request/AddRequestRequestDTO";
+import {AuthService} from "../../services/auth.service";
+import {UserService} from "../../services/user-service";
+import {RequestService} from "../../services/request.service";
+import {ChangePasswordRequestDTO} from "../../DTO/request/ChangePasswordRequestDTO";
+import {AddRequestRequestDTO} from "../../DTO/request/AddRequestRequestDTO";
 import {NavbarUpdateService} from "../../services/navbar-update.service";
 
-interface Report { reason: string; }
+interface Report {
+  reason: string;
+}
 
 @Component({
   selector: 'app-edit-profile',
@@ -29,36 +31,32 @@ export class EditProfileComponent implements OnInit {
   surname: string;
   bioText: string = 'Inserisci la tua biografia';
   profilePic: string | File = 'assets/istockphoto-1437816897-612x612.jpg';
-  userRole : string
+  userRole: string
 
-  // === FLAG DI STATO ===
   isEditingNick: boolean = false;
   isEditingBio: boolean = false;
   isFollowing: boolean = false;
   isOwnProfile: boolean = false;
   isAccountDisabled = false;
 
-  // === LIMITI E ID ===
   maxCharacters: number = 200;
   remainingCharacters: number = this.maxCharacters;
   idUser: string;
 
-  // === CAMPI PASSWORD ===
   oldPassword: string = '';
   newPassword: string = '';
   confirmPassword: string = '';
 
-  // === MOTIVI DI SEGNALAZIONE ===
   reportReason = '';
   reports: Report[] = [
-    { reason: 'Incitamento all\'odio o alla violenza' },
-    { reason: 'Contenuti offensivi o volgari' },
-    { reason: 'Disinformazione o fake news' },
-    { reason: 'Violazione della privacy' },
-    { reason: 'Violazione del copyright' },
-    { reason: 'Spam o contenuti promozionali indesiderati' },
-    { reason: 'Contenuti autolesionistici o suicidari' },
-    { reason: 'Furto d\'identità o profili falsi' },
+    {reason: 'Incitamento all\'odio o alla violenza'},
+    {reason: 'Contenuti offensivi o volgari'},
+    {reason: 'Disinformazione o fake news'},
+    {reason: 'Violazione della privacy'},
+    {reason: 'Violazione del copyright'},
+    {reason: 'Spam o contenuti promozionali indesiderati'},
+    {reason: 'Contenuti autolesionistici o suicidari'},
+    {reason: 'Furto d\'identità o profili falsi'},
   ];
 
   constructor(
@@ -69,8 +67,7 @@ export class EditProfileComponent implements OnInit {
     private requestService: RequestService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private navBarUpdate: NavbarUpdateService
-  ) {}
+    private navBarUpdate: NavbarUpdateService){}
 
   ngOnInit(): void {
     const idFromUrl = this.route.snapshot.paramMap.get('id');
@@ -101,7 +98,7 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
-  //FOLLOW / UNFOLLOW
+  // Metodo che gestisce il toggle del follow/unfollow dell'artista
   toggleFollow(): void {
     if (this.isFollowing) {
       this.unfollowArtist();
@@ -110,6 +107,7 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
+  // Metodo per seguire un artista
   followArtist(): void {
     if (!this.idUser) return;
 
@@ -133,6 +131,7 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
+  // Metodo per smettere di seguire un artista
   unfollowArtist(): void {
     if (!this.idUser) return;
 
@@ -156,10 +155,9 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
-
-  // Cambio Password
+  // Apre un dialog per cambiare la password dell'utente
   openChangePasswordDialog(): void {
-    const dialogRef = this.dialog.open(ChangePwDialogComponent, { width: '400px' });
+    const dialogRef = this.dialog.open(ChangePwDialogComponent, {width: '400px'});
 
     dialogRef.afterClosed().subscribe(result => {
       if (result?.oldPassword && result.newPassword && result.confirmPassword) {
@@ -170,8 +168,8 @@ export class EditProfileComponent implements OnInit {
         };
 
         this.userService.updatePassword(request).subscribe(
-          () => this.snackBar.open('Password cambiata con successo!', 'Chiudi', { duration: 3000 }),
-          () => this.snackBar.open('Errore nel cambiare la password.', 'Chiudi', { duration: 3000 })
+          () => this.snackBar.open('Password cambiata con successo!', 'Chiudi', {duration: 3000}),
+          () => this.snackBar.open('Errore nel cambiare la password.', 'Chiudi', {duration: 3000})
         );
       }
     });
@@ -191,6 +189,7 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
+  // Carica l'immagine profilo selezionata sul server
   uploadProfilePicture(file: File) {
     const idUser = this.authService.getIdUser();
     if (!idUser) return;
@@ -198,16 +197,16 @@ export class EditProfileComponent implements OnInit {
     this.userService.uploadProfilePicture(file, idUser).subscribe(
       response => {
         this.profilePic = response.image;
-        this.snackBar.open('Immagine profilo modificata con successo', 'Chiudi', { duration: 3000 });
+        this.snackBar.open('Immagine profilo modificata con successo', 'Chiudi', {duration: 3000});
         this.navBarUpdate.requestRefresh()
 
       },
-      () => this.snackBar.open('Errore durante l\'upload dell\'immagine', 'Chiudi', { duration: 3000 })
+      () => this.snackBar.open('Errore durante l\'upload dell\'immagine', 'Chiudi', {duration: 3000})
     );
 
   }
 
-  // Cambio Biografia
+  // Toggle per la modifica della biografia
   toggleEdit() {
     if (this.isEditingBio) this.updateBio();
     this.isEditingBio = !this.isEditingBio;
@@ -217,28 +216,30 @@ export class EditProfileComponent implements OnInit {
   updateBio() {
     if (this.bioText && this.bioText !== 'Inserisci la tua biografia') {
       this.userService.updateProfileBio(this.bioText).subscribe(
-        () => this.snackBar.open('Biografia aggiornata con successo', 'Chiudi', { duration: 3000 }),
-        () => this.snackBar.open('Errore durante il salvataggio della biografia', 'Chiudi', { duration: 3000 })
+        () => this.snackBar.open('Biografia aggiornata con successo', 'Chiudi', {duration: 3000}),
+        () => this.snackBar.open('Errore durante il salvataggio della biografia', 'Chiudi', {duration: 3000})
       );
     }
   }
 
+  // Aggiorna il conteggio dei caratteri rimanenti durante la modifica della bio
   checkCharacterLimit(event: any) {
     this.remainingCharacters = this.maxCharacters - event.target.value.length;
   }
 
-  // Cambio Nickname
+  // Toggle modifica nickname e invio aggiornamento se la modifica viene completata
   onEdit() {
     if (this.isEditingNick) {
       this.nickname = this.nickname.substring(0, 15);
       this.userService.updateProfileNickname(this.nickname).subscribe(
-        () => this.snackBar.open('Nickname modificato con successo', 'Chiudi', { duration: 3000 }),
-        () => this.snackBar.open('Errore durante il salvataggio del nickname', 'Chiudi', { duration: 3000 })
+        () => this.snackBar.open('Nickname modificato con successo', 'Chiudi', {duration: 3000}),
+        () => this.snackBar.open('Errore durante il salvataggio del nickname', 'Chiudi', {duration: 3000})
       );
     }
     this.isEditingNick = !this.isEditingNick;
   }
 
+  // Limita la lunghezza del nickname mentre si scrive
   checkNicknameLength() {
     if (this.nickname.length > 15) {
       this.nickname = this.nickname.substring(0, 15);
@@ -255,15 +256,15 @@ export class EditProfileComponent implements OnInit {
 
     request.subscribe(() => {
       const msg = this.isAccountDisabled ? 'Account disabilitato' : 'Account riabilitato';
-      this.snackBar.open(msg, 'Chiudi', { duration: 3000 });
+      this.snackBar.open(msg, 'Chiudi', {duration: 3000});
     });
   }
 
-  // Richiesta cambio ruolo
+  // Apre dialog per richiedere cambio ruolo (artista, recensore, moderatore)
   openRoleRequestDialog(role: 'ARTIST' | 'REVIEWER' | 'MODERATOR'): void {
     const dialogRef = this.dialog.open(RequestDialogComponent, {
       width: '400px',
-      data: { role }
+      data: {role}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -274,19 +275,24 @@ export class EditProfileComponent implements OnInit {
         };
 
         this.requestService.createRequest(requestPayload).subscribe(
-          () => this.snackBar.open(`Richiesta per diventare ${this.mapRoleName(role)} inviata con successo!`, 'Chiudi', { duration: 3000 }),
-          () => this.snackBar.open('Errore nell\'invio della richiesta. Riprova.', 'Chiudi', { duration: 3000 })
+          () => this.snackBar.open(`Richiesta per diventare ${this.mapRoleName(role)} inviata con successo!`, 'Chiudi', {duration: 3000}),
+          () => this.snackBar.open('Errore nell\'invio della richiesta. Riprova.', 'Chiudi', {duration: 3000})
         );
       }
     });
   }
 
+  // Mappa il ruolo tecnico con un nome utente-friendly per messaggi UI
   private mapRoleName(role: string): string {
     switch (role) {
-      case 'ARTIST': return 'artista';
-      case 'REVIEWER': return 'recensore';
-      case 'MODERATOR': return 'moderatore';
-      default: return role.toLowerCase();
+      case 'ARTIST':
+        return 'artista';
+      case 'REVIEWER':
+        return 'recensore';
+      case 'MODERATOR':
+        return 'moderatore';
+      default:
+        return role.toLowerCase();
     }
   }
 }

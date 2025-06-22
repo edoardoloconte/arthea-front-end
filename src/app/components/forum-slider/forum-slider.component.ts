@@ -37,6 +37,7 @@ export class ForumSliderComponent implements OnInit, AfterViewInit {
     this.observeVisibility();
   }
 
+  // Metodo per osservare se il carosello è visibile nella finestra
   observeVisibility() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -53,21 +54,25 @@ export class ForumSliderComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // Metodo che aggiorna la visibilità dei pulsanti "precedente" e "successivo"
   updateArrowVisibility() {
     this.showPrev = this.currentIndex > 0;
     this.showNext = this.chunkedForums.length > 1 && this.currentIndex < this.chunkedForums.length - 1;
   }
 
   ngOnInit(): void {
-    this.loadForums();
+    this.loadForums(); // Carica i forum per l'utente/artista
   }
 
+  // Recupera i forum tramite il servizio e li organizza in chunk per il carosello
   loadForums(): void {
     this.forumService.getAllForumByArtistId(Number(this.idUser)).subscribe({
       next: (data) => {
         this.forums = data;
         this.chunkedForums = this.chunkArray(data, 3);
         this.noForums = data.length === 0;
+
+        // Aggiorna la visibilità delle frecce appena caricato il carosello
         setTimeout(() => {
           this.updateArrowVisibility();
         }, 0);

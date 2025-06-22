@@ -10,16 +10,7 @@ import {GetAllPostResponseDTO} from "../../DTO/response/GetAllPostResponseDTO";
 export class CardComponent {
   @Input() post!: GetAllPostResponseDTO;
 
-  constructor(private router: Router) {
-    document.addEventListener('scroll', () => {
-      const header = document.querySelector('header');
-      if (window.scrollY > 0) {
-        header?.classList.add('scrolled');
-      } else {
-        header?.classList.remove('scrolled');
-      }
-    });
-  }
+  constructor(private router: Router) {}
 
   // Metodo per navigare a un post specifico passando l'ID
   navigateToPost(postId: number): void {

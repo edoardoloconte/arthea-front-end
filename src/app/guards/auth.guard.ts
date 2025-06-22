@@ -6,7 +6,6 @@ export const authGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Log per il debug
   console.log('Controllo se l\'utente è autenticato:', authService.getToken());
 
   if (authService.isAuthenticated()) {

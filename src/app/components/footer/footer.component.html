@@ -1,16 +1,20 @@
-<!--Check-->
 <footer>
   <div class="footerContainer">
     <div class="socialIcons">
+
+      <!-- Link a social -->
       <a href="https://www.facebook.com/profile.php?id=100080496258636" target="_blank" class="facebook"></a>
       <a href="https://www.instagram.com/arthea_5ci/" target="_blank" class="instagram"></a>
       <a href="https://x.com/" target="_blank" class="twitter"></a>
     </div>
     <div class="footerNav">
       <ul>
-      <li><a [routerLink]="['/home']" >Home</a></li>
+
+        <!-- Link interni che usano Angular Router per navigare senza ricaricare la pagina -->
+        <li><a [routerLink]="['/home']" >Home</a></li>
         <li><a [routerLink]="['/post-list']" >Pubblicazioni</a></li>
         <li><a [routerLink]="['/forum']" >Discussioni</a></li>
+
       </ul>
     </div>
   </div>

@@ -192,7 +192,7 @@
               </ng-container>
             </div>
 
-            <!-- TEMPLATE per risposte annidate -->
+            <!-- Template per risposte annidate -->
             <ng-template #replyTemplate let-reply let-parent="parent">
               <div class="reply-card">
                 <div class="comment-header-with-menu">
@@ -219,7 +219,7 @@
                     </button>
                   </div>
 
-                  <!-- MENU risposte -->
+                  <!-- Menu risposte -->
                   <mat-menu #replyMenu="matMenu">
                     <button mat-menu-item (click)="editReply(reply, parent)" *ngIf="loggedUserNickname == reply.nickname">
                       <mat-icon>edit</mat-icon>

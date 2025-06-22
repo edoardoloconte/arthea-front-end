@@ -9,25 +9,19 @@ declare var bootstrap: any;
   styleUrls: ['./card-slider.component.css']
 })
 export class CardSliderComponent implements OnInit {
-  // Array completo di post ricevuti dal servizio
   originalPosts: GetAllPostResponseDTO[] = [];
 
-  // Array di array, dove ogni sotto-array è un "chunk" di post da mostrare in una slide
   posts: GetAllPostResponseDTO[][] = [];
 
-  // Input per definire il contesto: home o edit-profile, default a 'home'
   @Input() context: 'home' | 'edit-profile' = 'home';
   @Input() idUser?: string;
 
-  // Flag per mostrare messaggio se non ci sono post
   noPosts = false;
 
-  // Variabili per controllo della navigazione del carosello
   showNext = false;
   showPrev = false;
   currentIndex = 0;
 
-  // Flag per animazioni basate sulla visibilità del carosello
   inView: boolean = false;
 
   constructor(
@@ -45,7 +39,7 @@ export class CardSliderComponent implements OnInit {
     }
   }
 
-  /** Carica tutti i post (per la home) */
+  // Carica tutti i post (per la home)
   private loadAllPosts(): void {
     this.postService.getAllPosts().subscribe(data => {
       this.originalPosts = data || [];
@@ -56,7 +50,7 @@ export class CardSliderComponent implements OnInit {
     });
   }
 
-  /** Carica i post relativi a uno specifico artista */
+  // Carica i post relativi a uno specifico artista
   private loadPostsByArtist(userId: number): void {
     this.postService.getAllPostsByArtist(userId).subscribe(data => {
       console.log('Dati Posts Artista:', data);
@@ -92,7 +86,7 @@ export class CardSliderComponent implements OnInit {
     this.observeCarouselVisibility();
   }
 
-  /** Gestisce l'evento slide del carosello per aggiornare indice e frecce */
+  // Gestisce l'evento slide del carosello per aggiornare indice e frecce
   private setupCarouselSlideListener(): void {
     const carouselElement = document.querySelector('#carouselExample');
     if (carouselElement) {
@@ -108,7 +102,7 @@ export class CardSliderComponent implements OnInit {
     }
   }
 
-  /** Osserva la visibilità del carosello per attivare animazioni */
+  // Osserva la visibilità del carosello per attivare animazioni
   private observeCarouselVisibility(): void {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -131,7 +125,7 @@ export class CardSliderComponent implements OnInit {
     this.updateChunks();
   }
 
-  /** Divide l'array originale in chunk in base alla larghezza finestra */
+  // Divide l'array originale in chunk in base alla larghezza finestra
   updateChunks(): void {
     const chunkSize = window.innerWidth < 768 ? 1 : 3;
     this.posts = this.splitIntoChunks(this.originalPosts, chunkSize);
@@ -139,7 +133,7 @@ export class CardSliderComponent implements OnInit {
     this.updateArrowVisibility();
   }
 
-  /** Funzione helper per dividere un array in chunk di dimensione fissa */
+  // Funzione helper per dividere un array in chunk di dimensione fissa
   splitIntoChunks(array: GetAllPostResponseDTO[], chunkSize: number): GetAllPostResponseDTO[][] {
     const result: GetAllPostResponseDTO[][] = [];
     for (let i = 0; i < array.length; i += chunkSize) {
@@ -148,7 +142,7 @@ export class CardSliderComponent implements OnInit {
     return result;
   }
 
-  /** Inizializza il carosello Bootstrap con opzioni di base */
+  // Inizializza il carosello Bootstrap con opzioni di base
   initCarousel(): void {
     const carouselElement = document.querySelector('#carouselExample');
     if (carouselElement) {

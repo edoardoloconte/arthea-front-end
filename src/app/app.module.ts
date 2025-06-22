@@ -39,7 +39,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { CommentsComponent } from './components/comments/comments.component';
 import {MatMenuModule} from '@angular/material/menu';
-import { TimeAgoPipe } from './pipes/time-ago.pipe';
 import { ReviewComponent } from './components/review/review.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { FooterComponent } from './components/footer/footer.component';
@@ -71,7 +70,6 @@ import { ForumDialogComponent } from './components/dialogs/forum-dialog/forum-di
     EditProfileComponent,
     PostComponent,
     CommentsComponent,
-    TimeAgoPipe,
     ReviewComponent,
     FooterComponent,
     ForumPostComponent,

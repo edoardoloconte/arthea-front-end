@@ -12,7 +12,6 @@ import { DeleteCommentDialogComponent } from 'src/app/components/dialogs/delete-
   templateUrl: './request.component.html',
   styleUrls: ['./request.component.css']
 })
-
 export class RequestComponent implements OnInit {
 
   requests: GetAllRequestResponseDTO[] = [];
@@ -24,11 +23,12 @@ export class RequestComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
-
+  // Metodo chiamato all'inizializzazione del componente
   ngOnInit(): void {
     this.loadRequests();
   }
 
+  // Carica tutte le richieste dal backend e le assegna all'array `requests`
   loadRequests(): void {
     this.requestService.getRequests().subscribe(
       (data: GetAllRequestResponseDTO[]) => {
@@ -38,6 +38,7 @@ export class RequestComponent implements OnInit {
     );
   }
 
+  // Apre una finestra di dialogo per confermare l'eliminazione della richiesta
   confirmDelete(index: number): void {
     const request = this.requests[index];
 
@@ -49,6 +50,7 @@ export class RequestComponent implements OnInit {
       }
     });
 
+    // Se l'utente conferma l'eliminazione, viene chiamato `deleteRequest`
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
         this.deleteRequest(index);
@@ -56,6 +58,7 @@ export class RequestComponent implements OnInit {
     });
   }
 
+  // Elimina la richiesta selezionata e aggiorna la UI
   deleteRequest(index: number): void {
     const requestId = this.requests[index].idRequest;
     this.requestService.deleteRequest(requestId).subscribe(
@@ -70,15 +73,17 @@ export class RequestComponent implements OnInit {
     );
   }
 
+  // Approva una richiesta, promuovendo l'utente al ruolo desiderato
   approveRequest(role: string, emailUser: string, idRequest: number): void {
     console.log("role:", role);
     console.log("email:", emailUser);
     console.log("id Request:", idRequest);
 
+    // Funzione di utilità per gestire il successo della promozione
     const handleSuccess = (roleName: string) => {
       this.showSnackBar(`Utente promosso a ${roleName} con successo!`);
 
-      // Dopo la promozione, elimina la richiesta
+      // Dopo la promozione, si elimina la richiesta associata
       this.requestService.deleteRequest(idRequest).subscribe(
         () => {
           this.loadRequests();
@@ -90,7 +95,7 @@ export class RequestComponent implements OnInit {
       );
     };
 
-    // Selezione del ruolo e promozione utente
+    // Seleziona il metodo corretto per promuovere l’utente in base al ruolo richiesto
     switch (role.toUpperCase()) {
       case 'ARTIST':
         this.userService.mentionArtist(emailUser).subscribe(
@@ -122,11 +127,14 @@ export class RequestComponent implements OnInit {
         );
         break;
 
+      // Gestione di ruoli non supportati
       default:
         alert('Ruolo non supportato per l’approvazione.');
         console.warn('Ruolo non gestito:', role);
     }
   }
+
+  // Mostra un messaggio a comparsa (snackbar) nella parte superiore della UI
   showSnackBar(message: string, action: string = 'OK', duration: number = 3000): void {
     this.snackBar.open(message, action, {
       duration,

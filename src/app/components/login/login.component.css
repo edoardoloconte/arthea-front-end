@@ -87,7 +87,6 @@ i {
   margin-bottom: 45px;
 }
 
-/*Elemento dei bottoni a destra (email,pw,bottone entra)*/
 .input-field {
   display: flex;
   flex-direction: column;
@@ -95,7 +94,6 @@ i {
   padding: 0 10px 0 10px;
 }
 
-/*Pulsante Entra*/
 .submit {
   border: none;
   outline: none;
@@ -169,13 +167,13 @@ span a:hover {
 
 .fade-in {
   opacity: 0;
-  transform: translateY(20px); /* parte 20px sotto */
+  transform: translateY(20px);
   animation: fadeInUp 0.9s ease forwards;
 }
 
 @keyframes fadeInUp {
   to {
     opacity: 1;
-    transform: translateY(0); /* torna alla posizione normale */
+    transform: translateY(0);
   }
 }

@@ -25,6 +25,7 @@ export class LoginComponent {
 
   constructor(private router: Router, private authService: AuthService, private snackBar: MatSnackBar) {}
 
+  // Metodo chiamato quando l'utente invia il form di login
   onLogin(event: Event): void {
     this.showAnimation = true;
     event.preventDefault();
@@ -50,17 +51,19 @@ export class LoginComponent {
     });
   }
 
-  // Funzione per navigare alla registrazione
+  // Metodo per navigare alla registrazione
   navigateToRegistration(event: Event): void {
     event.preventDefault();
     this.showAnimation = true;
 
+    // Dopo 2 secondi di animazione, naviga alla pagina di registrazione
     setTimeout(() => {
       this.showAnimation = false;
       this.router.navigate(['/registration']);
     }, 2000);
   }
 
+  // Metodo per mostrare una snackbar con messaggio e durata personalizzata
   showSnackbar(message: string, duration: number = 3000): void {
     this.snackBar.open(message, 'Chiudi', {
       duration: duration,

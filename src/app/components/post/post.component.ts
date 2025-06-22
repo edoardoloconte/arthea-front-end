@@ -16,6 +16,7 @@ import { AddReportPostRequestDTO } from "../../DTO/request/AddReportPostRequestD
 import { DeleteCommentDialogComponent } from 'src/app/components/dialogs/delete-comment-dialog/delete-comment-dialog.component';
 import { ReportDialogComponent } from 'src/app/components/dialogs/report-dialog/report-dialog.component';
 
+// Decoratore del componente
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
@@ -53,6 +54,7 @@ export class PostComponent implements OnInit, AfterViewInit {
   @ViewChild('descriptionRef') descriptionRef!: ElementRef;
   isDescriptionVisible = false;
 
+  // Mappatura motivi segnalazione
   reportMapping: { [key: string]: string } = {
     "Incitamento all'odio o alla violenza": "HATE_SPEECH",
     "Contenuti offensivi o volgari": "OFFENSIVE_CONTENT",
@@ -64,6 +66,7 @@ export class PostComponent implements OnInit, AfterViewInit {
     "Furto d'identità o profili falsi": "IDENTITY_THEFT"
   };
 
+  // Opzioni segnalazione per la modale
   reportOptions = Object.keys(this.reportMapping).map(key => ({
     key: this.reportMapping[key],
     label: key
@@ -79,9 +82,7 @@ export class PostComponent implements OnInit, AfterViewInit {
     private snackBar: MatSnackBar
   ) { }
 
-  /**
-   * Inizializzazione componente: carica post, utente, like, media recensioni
-   */
+  // Metodo chiamato all'inizializzazione del componente
   ngOnInit(): void {
     this.idUser = this.authService.getIdUser();
     const state = history.state;
@@ -89,27 +90,26 @@ export class PostComponent implements OnInit, AfterViewInit {
     if (state && state.idPost) {
       this.idPost = state.idPost;
 
-      // Carica post dal backend
       this.postService.getPostById(this.idPost).subscribe(post => {
         this.post = post;
 
-        // Settaggio titoli e descrizione iniziali
+        // Inizializza descrizione e titolo
         this.title = post.title;
         this.newTitle = post.title;
         this.description = post.description;
         this.newDescription = post.description;
         this.likeCount = post.numLikes;
 
-        // Verifica se l'utente corrente è l'autore
+        // Verifica se l'utente è autore
         this.isAuthor = (this.idUser === String(post.idUser));
 
-        // Recupera nickname utente
+        // Recupera dati utente
         this.authService.getUserData(this.idUser).subscribe(user => {
           this.nicknameUser = user.nickname;
-          this.userRole = user.role
+          this.userRole = user.role;
         });
 
-        // Controlla se l'utente ha già messo like e ottieni id interazione
+        // Verifica se ha messo like
         const userLike = this.post.likes.find(like => like.idUser === Number(this.idUser));
         if (userLike) {
           this.hasLiked = true;
@@ -119,13 +119,12 @@ export class PostComponent implements OnInit, AfterViewInit {
           this.idInteraction = null;
         }
 
-        this.cdr.detectChanges(); // Forza rilevamento cambiamenti
+        this.cdr.detectChanges();
       });
 
-      // Carica media recensioni per il post
+      // Carica la media delle recensioni
       this.postService.getAverageReviewPerPost(this.idPost).subscribe(avg => {
         this.averageReview = avg;
-        console.log("Average review caricata:", this.averageReview);
         this.cdr.detectChanges();
       }, error => {
         console.error("Errore nel caricamento della media recensioni:", error);
@@ -136,9 +135,7 @@ export class PostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Attiva/disattiva modalità modifica titolo e salva se necessario
-   */
+  // Gestisce la modifica e salvataggio del titolo
   editTitle() {
     if (this.isEditingTitle) {
       this.title = this.newTitle || '';
@@ -154,12 +151,11 @@ export class PostComponent implements OnInit, AfterViewInit {
           this.fadeInTitle = true;
           this.showFeedIcon = true;
 
-          // Effetto fade-in e nascondi icona dopo timeout
           setTimeout(() => this.fadeInTitle = false, 600);
           setTimeout(() => this.showFeedIcon = false, 2500);
         },
         error => {
-          console.error('Errore durante l\'aggiornamento del titolo:', error);
+          console.error('Errore aggiornando il titolo:', error);
           this.snackBar.open('Errore durante il salvataggio del titolo. Riprova.', 'Chiudi', {
             duration: 3000,
             horizontalPosition: 'center',
@@ -169,18 +165,14 @@ export class PostComponent implements OnInit, AfterViewInit {
         }
       );
     } else {
-      // Passa titolo corrente al campo di modifica
       this.newTitle = this.title || '';
     }
     this.isEditingTitle = !this.isEditingTitle;
   }
 
-  /**
-   * Gestisce il toggle del like: aggiunge o rimuove il like
-   */
+  // Aggiunge o rimuove il like
   toggleLike() {
     if (this.hasLiked) {
-      // Rimuovi like
       this.interactionService.deleteInteraction(this.idInteraction!).subscribe(
         () => {
           this.likeCount--;
@@ -190,7 +182,6 @@ export class PostComponent implements OnInit, AfterViewInit {
         error => console.error('Errore nella rimozione del like:', error)
       );
     } else {
-      // Aggiungi like
       this.interactionService.addLikePost(this.idPost).subscribe(
         like => {
           this.likeCount++;
@@ -203,16 +194,12 @@ export class PostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Abilita/disabilita la modalità di modifica descrizione
-   */
+  // Abilita/disabilita la modalità di modifica descrizione
   editDescription() {
     this.isEditing = !this.isEditing;
   }
 
-  /**
-   * Conferma la modifica della descrizione salvandola nel backend
-   */
+  // Conferma e salva la nuova descrizione
   confirmEdit() {
     if (this.newDescription.trim() !== "") {
       const request: ChangeDescriptionPostRequestDTO = {
@@ -223,13 +210,13 @@ export class PostComponent implements OnInit, AfterViewInit {
       this.postService.updateDescriptionPost(request).subscribe(
         () => {
           this.post.description = this.newDescription;
-          this.description = this.newDescription; // Sincronizza descrizione
+          this.description = this.newDescription;
 
           this.fadeInDescription = true;
           setTimeout(() => this.fadeInDescription = false, 500);
 
-          this.cdr.detectChanges(); // Forza rilevamento modifiche
-          this.isEditing = false;    // Esci da modalità editing solo dopo successo
+          this.cdr.detectChanges();
+          this.isEditing = false;
         },
         error => {
           console.error('Errore aggiornando la descrizione:', error);
@@ -242,7 +229,6 @@ export class PostComponent implements OnInit, AfterViewInit {
         }
       );
     } else {
-      // Descrizione vuota: potresti gestire questo caso
       this.snackBar.open('La descrizione non può essere vuota.', 'Chiudi', {
         duration: 3000,
         horizontalPosition: 'center',
@@ -252,9 +238,7 @@ export class PostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Conferma eliminazione post tramite dialog
-   */
+  // Mostra modale di conferma eliminazione
   confirmDeletePost() {
     const dialogRef = this.dialog.open(DeleteCommentDialogComponent, {
       width: '300px',
@@ -271,9 +255,7 @@ export class PostComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /**
-   * Elimina il post e naviga a home in caso di successo
-   */
+  // Elimina definitivamente il post
   deletePost() {
     if (!this.idPost) return;
 
@@ -299,9 +281,7 @@ export class PostComponent implements OnInit, AfterViewInit {
     );
   }
 
-  /**
-   * Gestisce la visibilità della descrizione con IntersectionObserver per animazioni/effetti
-   */
+  // Inizializza osservatore per animazione descrizione
   ngAfterViewInit(): void {
     if (this.descriptionRef) {
       const observer = new IntersectionObserver(
@@ -315,9 +295,7 @@ export class PostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Apre la modale per la segnalazione del post
-   */
+  // Apre la modale di segnalazione del post
   openReportModalForPost(): void {
     const dialogRef = this.dialog.open(ReportDialogComponent, {
       width: '400px',
@@ -357,10 +335,11 @@ export class PostComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
   protected readonly Number = Number;
 
+  // Quando una recensione viene aggiunta, ricalcola la media
   onReviewAdded() {
-    // Puoi ad esempio aggiornare la media delle recensioni
     this.postService.getAverageReviewPerPost(this.idPost).subscribe(avg => {
       this.averageReview = avg;
       this.cdr.detectChanges();

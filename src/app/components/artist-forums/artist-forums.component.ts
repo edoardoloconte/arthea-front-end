@@ -12,6 +12,7 @@ export class ArtistForumsComponent {
 
   constructor(private router: Router) {}
 
+  // Metodo che naviga alla pagina del forum, utilizzando l'id per creare un anchor link
   goToForum(idForum: number): void {
     this.router.navigate(['/forum'], { fragment: 'forum-' + idForum });
   }

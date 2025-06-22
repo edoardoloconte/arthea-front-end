@@ -16,26 +16,20 @@ export class HomeComponent implements AfterViewInit {
 
   constructor() {}
 
-  /**
-   * Metodo eseguito dopo che la view è stata inizializzata.
-   * Avvia l’IntersectionObserver e lo slider.
-   */
+  //Metodo che avvia l’IntersectionObserver e lo slider.
+
   ngAfterViewInit(): void {
-    this.setupIntersectionObserver(); // Animazioni al scroll
-    this.setupSlider();               // Inizializzazione slider
+    this.setupIntersectionObserver();
+    this.setupSlider();
   }
 
-  /**
-   * Crea un IntersectionObserver per aggiungere la classe 'visible'
-   * agli elementi che entrano nel viewport, attivando così animazioni CSS.
-   */
+  //Crea un IntersectionObserver per aggiungere la classe 'visible' agli elementi che entrano nel viewport
   private setupIntersectionObserver(): void {
     const options = {
       root: null,
       rootMargin: '0px',
       threshold: 0.5
     };
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         entry.target.classList.toggle('visible', entry.isIntersecting);
@@ -48,9 +42,8 @@ export class HomeComponent implements AfterViewInit {
     if (this.subtitle) observer.observe(this.subtitle.nativeElement);
   }
 
-  /**
-   * Gestisce la logica dello slider: cambio immagine, animazioni caption, puntini, e auto-scroll.
-   */
+  //Gestisce la logica dello slider: cambio immagine, animazioni caption, puntini, e auto-scroll.
+
   private setupSlider(): void {
     const slider = document.querySelector<HTMLElement>('.slider .list');
     const items = document.querySelectorAll<HTMLElement>('.slider .list .item');
@@ -73,9 +66,8 @@ export class HomeComponent implements AfterViewInit {
       firstCaption.classList.add('animate');
     }
 
-    /**
-     * Funzione per aggiornare lo stato dello slider: posizione, puntini, e animazioni.
-     */
+    //Funzione per aggiornare lo stato dello slider: posizione, puntini, e animazioni.
+
     const reloadSlider = () => {
       const shift = active * window.innerWidth;
       slider.style.transform = `translateX(-${shift}px)`;

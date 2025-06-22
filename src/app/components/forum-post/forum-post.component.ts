@@ -100,16 +100,17 @@ export class ForumPostComponent {
     this.loadUserData();
   }
 
+  // Recupera i dati utente loggato e controlla se segue il forum
   private loadUserData(): void {
     const idUser = this.authService.getIdUser();
     if (idUser) {
       this.authService.getUserData(idUser).subscribe({
         next: (user: GetAllUserResponseDTO) => {
           this.loggedUserNickname = user.nickname;
-          this.userProfilePic = user.image
-          this.userRole = user.role
-          console.log(this.author)
-          console.log(this.loggedUserNickname)
+          this.userProfilePic = user.image;
+          this.userRole = user.role;
+
+          // Controlla follow solo se l’autore è diverso dall’utente corrente
           if (this.author !== this.loggedUserNickname) {
             this.checkForumFollowingStatus();
           }
@@ -119,13 +120,13 @@ export class ForumPostComponent {
     }
   }
 
+  // Verifica se l'utente segue il forum
   private checkForumFollowingStatus(): void {
     this.forumService.isFollowingForum(this.forumId).subscribe({
       next: (isFollowing) => this.isFollowing = isFollowing,
       error: (err) => console.error('Errore nel controllo follow forum', err)
     });
   }
-
 
   toggleFollow(): void {
     if (this.isFollowing) {
@@ -135,6 +136,7 @@ export class ForumPostComponent {
     }
   }
 
+  // Inizia a seguire il forum
   private followForum(): void {
     this.forumService.followForum(this.forumId).subscribe({
       next: () => {
@@ -155,6 +157,7 @@ export class ForumPostComponent {
     });
   }
 
+  // Smette di seguire il forum
   private unfollowForum(): void {
     this.forumService.unfollowForum(this.forumId).subscribe({
       next: () => {
@@ -175,19 +178,23 @@ export class ForumPostComponent {
     });
   }
 
+  // Espande o comprime la descrizione del forum
   toggleExpansion(): void {
     this.isExpanded = !this.isExpanded;
   }
 
+  // Ricarica i forum
   reloadForums(): void {
     this.forumReloadServiceService.triggerReload();
   }
 
+  // modifica del titolo
   startEditTitle(): void {
     this.isEditingTitle = true;
     this.editedTitle = this.title;
   }
 
+  // Salva nuova versione del titolo
   saveTitleEdit(): void {
     const trimmedTitle = this.editedTitle.trim();
     if (trimmedTitle && trimmedTitle !== this.title) {
@@ -212,16 +219,19 @@ export class ForumPostComponent {
     }
   }
 
+  // Annulla modifica del titolo
   cancelTitleEdit(): void {
     this.isEditingTitle = false;
     this.editedTitle = '';
   }
 
+  // modifica della descrizione
   startEditDescription(): void {
     this.isEditingDescription = true;
     this.editedDescription = this.description || '';
   }
 
+  // Salva la descrizione modificata del forum se è diversa da quella attuale
   saveDescriptionEdit(): void {
     const trimmedDescription = this.editedDescription.trim();
     if (trimmedDescription && trimmedDescription !== this.description) {
@@ -246,11 +256,13 @@ export class ForumPostComponent {
     }
   }
 
+// Annulla l'editing della descrizione
   cancelDescriptionEdit(): void {
     this.isEditingDescription = false;
     this.editedDescription = this.description;
   }
 
+// Aggiunge un commento al forum
   addComment(): void {
     const trimmed = this.commentText.trim();
     if (!trimmed) return;
@@ -262,6 +274,7 @@ export class ForumPostComponent {
 
     this.interactionService.addCommentForum(commentDTO).subscribe({
       next: (res) => {
+        // Inserisce il nuovo commento in cima alla lista
         if (res && res.nickname && res.description && res.date) {
           this._comments.unshift({
             nickname: res.nickname,
@@ -287,11 +300,13 @@ export class ForumPostComponent {
     });
   }
 
+  // Attiva la modalità modifica per un commento
   editComment(comment: any): void {
     this.editingComment = comment;
     this.editingText = comment.description;
   }
 
+  // Salvataggio di un commento modificato
   saveEditedComment(): void {
     if (!this.editingComment || !this.editingText.trim()) return;
 
@@ -321,11 +336,13 @@ export class ForumPostComponent {
     });
   }
 
+  // Annulla la modifica di un commento
   cancelEdit(): void {
     this.editingComment = null;
     this.editingText = '';
   }
 
+  // Mostra un dialogo di conferma prima di eliminare un commento
   confirmDeleteComment(comment: GetCommentPerForumResponseDTO): void {
     const dialogRef = this.dialog.open(DeleteCommentDialogComponent, {
       width: '400px',
@@ -342,6 +359,7 @@ export class ForumPostComponent {
     });
   }
 
+  // Elimina un commento dal forum
   deleteComment(comment: GetCommentPerForumResponseDTO): void {
     if (!comment.idInteraction) return;
 
@@ -364,15 +382,18 @@ export class ForumPostComponent {
     });
   }
 
+  // Mostra/nasconde il form per rispondere a un commento
   toggleReply(comment: GetCommentPerForumResponseDTO): void {
     this.replyingTo = this.replyingTo === comment ? null : comment;
     this.replyText = '';
   }
 
+  // Mostra/nasconde le risposte di un commento
   toggleReplies(commentId: number): void {
     this.replyVisibility[commentId] = !this.replyVisibility[commentId];
   }
 
+  // Invia una risposta a un commento
   submitReply(comment: GetCommentPerForumResponseDTO): void {
     const trimmed = this.replyText.trim();
     if (!trimmed || !comment || !comment.idInteraction) return;
@@ -397,6 +418,7 @@ export class ForumPostComponent {
     });
   }
 
+  // Invia una risposta a una risposta (annidamento)
   replyToReply(reply: GetCommentRepliesResponseDTO): void {
     const trimmed = this.replyText.trim();
     if (!trimmed || !reply || !reply.idInteraction) return;
@@ -421,11 +443,14 @@ export class ForumPostComponent {
     });
   }
 
+  //Modifica di una risposta
   editReply(reply: GetCommentRepliesResponseDTO, parentComment: GetCommentPerForumResponseDTO): void {
     this.editingReply = reply;
     this.editingReplyText = reply.description;
   }
 
+
+  // Salva la risposta modificata
   saveEditedReply(parentComment: GetCommentPerForumResponseDTO): void {
     if (!this.editingReply || !this.editingReplyText.trim()) return;
 
@@ -455,11 +480,13 @@ export class ForumPostComponent {
     });
   }
 
+  // Annulla la modifica della risposta
   cancelEditReply(): void {
     this.editingReply = null;
     this.editingReplyText = '';
   }
 
+  // Elimina una risposta a un commento
   deleteReply(reply: GetCommentRepliesResponseDTO, parentComment: GetCommentPerForumResponseDTO): void {
     this.interactionService.deleteInteraction(reply.idInteraction).subscribe({
       next: () => {
@@ -485,6 +512,7 @@ export class ForumPostComponent {
     });
   }
 
+  // Conferma l'eliminazione di una risposta tramite dialog
   confirmDeleteReply(reply: GetCommentRepliesResponseDTO, parentComment: GetCommentPerForumResponseDTO): void {
     const dialogRef = this.dialog.open(DeleteCommentDialogComponent, {
       data: {
@@ -499,6 +527,7 @@ export class ForumPostComponent {
     });
   }
 
+  // Conferma e gestisce l'eliminazione di un forum
   confirmDeleteForum(idForum: number): void {
     const dialogRef = this.dialog.open(DeleteCommentDialogComponent, {
       width: '400px',
@@ -515,6 +544,7 @@ export class ForumPostComponent {
     });
   }
 
+  // Effettua la chiamata di eliminazione al backend per il forum
   deleteForum(idForum: number): void {
     this.forumService.deleteForum(idForum).subscribe({
       next: () => {
@@ -537,6 +567,7 @@ export class ForumPostComponent {
     });
   }
 
+  // Segnala un commento
   reportComment(commentId: number): void {
     const dialogRef = this.dialog.open(ReportDialogComponent, {
       width: '600px',
@@ -567,6 +598,7 @@ export class ForumPostComponent {
     });
   }
 
+  // Segnala un forum
   reportForum(forumId: number): void {
     const dialogRef = this.dialog.open(ReportDialogComponent, {
       width: '600px',
@@ -596,11 +628,9 @@ export class ForumPostComponent {
       }
     });
   }
-
   private showSuccessSnackbar(message: string): void {
     this.snackBar.open(message, 'Chiudi', {duration: 3000});
   }
-
   private showErrorSnackbar(message: string): void {
     this.snackBar.open(message, 'Chiudi', {duration: 4000});
   }

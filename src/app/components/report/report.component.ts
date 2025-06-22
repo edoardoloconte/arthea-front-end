@@ -16,7 +16,7 @@ export class ReportComponent implements OnInit {
   postReports: GetAllReportPostResponseDTO[] = [];
   forumReports: GetAllReportForumResponseDTO[] = [];
 
-  // Stato per la conferma cancellazione
+  // Stato utilizzato per la gestione della conferma di eliminazione di una segnalazione
   isConfirmingDelete = false;
   confirmDeleteIndex: number | null = null;
   deleteType: 'comment' | 'post' | 'forum' | null = null;
@@ -30,14 +30,14 @@ export class ReportComponent implements OnInit {
     this.loadAllReports();
   }
 
-  /* Carica tutti i tipi di segnalazioni */
+  // Carica tutte le segnalazioni disponibili (commenti, post, forum)
   loadAllReports(): void {
     this.loadCommentReports();
     this.loadPostReports();
     this.loadForumReports();
   }
 
-  /* Carica segnalazioni commenti */
+  // Carica le segnalazioni relative ai commenti
   loadCommentReports(): void {
     this.interactionService.getAllReportComment().subscribe({
       next: (data) => this.commentReports = data,
@@ -45,7 +45,7 @@ export class ReportComponent implements OnInit {
     });
   }
 
-  /* Carica segnalazioni post */
+  // Carica le segnalazioni relative ai post
   loadPostReports(): void {
     this.interactionService.getAllReportPost().subscribe({
       next: (data) => this.postReports = data,
@@ -53,7 +53,7 @@ export class ReportComponent implements OnInit {
     });
   }
 
-  /* Carica segnalazioni forum */
+  // Carica le segnalazioni relative ai forum
   loadForumReports(): void {
     this.interactionService.getAllReportForum().subscribe({
       next: (data) => this.forumReports = data,
@@ -61,7 +61,7 @@ export class ReportComponent implements OnInit {
     });
   }
 
-  /* Avvia conferma e rimozione segnalazione */
+  // Attiva la modalità di conferma eliminazione per una determinata segnalazione
   confirmDeleteReport(index: number, type: 'comment' | 'post' | 'forum'): void {
     this.isConfirmingDelete = true;
     this.confirmDeleteIndex = index;
@@ -69,13 +69,13 @@ export class ReportComponent implements OnInit {
     this.deleteReport();
   }
 
-  /* Cancella la segnalazione selezionata */
+  // Elimina la segnalazione selezionata in base al tipo e aggiorna l'interfaccia
   deleteReport(): void {
     if (this.confirmDeleteIndex === null || this.deleteType === null) return;
 
     let reportId: number;
 
-    // Ottieni ID della segnalazione in base al tipo
+    // Determina l’ID della segnalazione in base al tipo
     switch (this.deleteType) {
       case 'comment':
         reportId = this.commentReports[this.confirmDeleteIndex].idInteraction;
@@ -88,7 +88,7 @@ export class ReportComponent implements OnInit {
         break;
     }
 
-    // Elimina la segnalazione tramite il servizio
+    // Richiesta al servizio per eliminare la segnalazione
     this.interactionService.deleteReport(reportId).subscribe(() => {
       switch (this.deleteType) {
         case 'comment':
@@ -102,28 +102,28 @@ export class ReportComponent implements OnInit {
           break;
       }
 
-      // Resetta lo stato della conferma
+      // Reset dello stato di conferma eliminazione
       this.isConfirmingDelete = false;
       this.confirmDeleteIndex = null;
       this.deleteType = null;
     });
   }
 
-  /* Naviga alla pagina di dettaglio post */
+  // Naviga alla pagina di dettaglio del post selezionato
   navigateToPost(postId: number): void {
     this.router.navigate(['/post'], { state: { idPost: postId } });
   }
 
-  /* Naviga alla sezione specifica del forum */
+  // Naviga alla sezione specifica del forum corrispondente all’ID
   goToForum(idForum: number): void {
     this.router.navigate(['/forum'], { fragment: 'forum-' + idForum });
   }
 
-  /* Placeholder per navigazione al commento segnalato */
+  // Metodo di placeholder per la navigazione al commento segnalato (da implementare)
   goToPostCommentReported(commentReportedId: number): void {
   }
 
-  /*Visualizza i dettagli della segnalazione nel log */
+  // Stampa i dettagli della segnalazione nel log per debug
   viewReportDetails(report: any): void {
     console.log('Visualizza dettagli del report:', report);
   }

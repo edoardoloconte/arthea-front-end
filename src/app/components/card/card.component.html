@@ -1,15 +1,25 @@
-<!--Check-->
+<!-- Link cliccabile che attiva il metodo navigateToPost passando l'ID del post -->
 <a (click)="navigateToPost(post.idPost)">
   <div class="card" style="width: 18rem;">
+
+    <!-- Immagine principale del post -->
     <img class="card-img-top" [src]="post.image" alt="Card image cap">
     <div class="card-body">
       <div class="title-container">
+
+        <!-- Link al profilo dell'utente che ha pubblicato il post -->
         <a [routerLink]="['/edit-profile', post.idUser]">
           <img class="profile-img" [src]="post.profilePicUser" alt="Immagine profilo">
         </a>
+
+        <!-- Titolo del post -->
         <h5 class="card-title">{{ post.title }}</h5>
       </div>
+
+      <!-- Località associata al post -->
       <p class="card-address">{{ post.descriptionLocation }}</p>
+
+      <!-- Data di pubblicazione del post, formattata -->
       <p class="card-text">
         <small class="text-body-secondary">Pubblicato: {{ post.dateCreation  | date:'dd/MM/yyyy' }}</small>
       </p>

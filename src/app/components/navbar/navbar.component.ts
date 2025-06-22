@@ -18,9 +18,6 @@ export class NavbarComponent implements OnInit {
   role: string;
   image: string;
 
-  // Riferimento al sub-menu per il rilevamento dei click esterni
-  @ViewChild('subMenu', { static: false }) subMenu: ElementRef;
-
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -28,10 +25,8 @@ export class NavbarComponent implements OnInit {
 
   ) {}
 
-
-
   ngOnInit(): void {
-    // === Gestione visibilità della pagina ===
+    // Gestisce la visibilità della pagina (ad esempio se la tab è nascosta o attiva)
     document.addEventListener("visibilitychange", () => {
       this.isPageVisible = !document.hidden;
       if (!this.isPageVisible) {
@@ -39,7 +34,7 @@ export class NavbarComponent implements OnInit {
       }
     });
 
-    // === Recupero dati utente ===
+    // Se esiste un utente autenticato, recupera i suoi dati (nickname, ruolo, immagine)
     const idUser = this.authService.getIdUser();
     console.log(idUser);
 
@@ -61,7 +56,7 @@ export class NavbarComponent implements OnInit {
       );
     }
 
-    // === Effetto scroll sulla navbar ===
+    // Effetto scroll sulla navbar: aggiunge o rimuove la classe "scrolled" al tag header
     document.addEventListener('scroll', () => {
       const header = document.querySelector('header');
       if (window.scrollY > 0) {
@@ -75,17 +70,17 @@ export class NavbarComponent implements OnInit {
       this.refreshUserData();
     });
   }
-  // === Toggle sub-menu profilo ===
+  //Toggle sub-menu profilo
   toggleMenu(): void {
     this.isMenuOpened = !this.isMenuOpened;
   }
 
-  // === Toggle menu mobile ===
+  //Toggle menu mobile
   toggleMobileMenu(): void {
     this.isMobileMenuOpened = !this.isMobileMenuOpened;
   }
 
-  // === Logout dell'utente ===
+  //Logout dell'utente
   onLogout(): void {
     this.authService.logout();
     this.router.navigate(['/']);

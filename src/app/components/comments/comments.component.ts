@@ -40,7 +40,6 @@ export class CommentsComponent implements OnInit {
   visibleReplies: Set<number> = new Set();
   replyTexts: { [key: number]: string } = {};
 
-  // Oggetti DTO utilizzati per richieste
   addCommentPost: AddCommentPerPostRequestDTO = {description: '', idPost: 0};
   changeCommentDescription!: ChangeCommentDescriptionRequestDTO;
 

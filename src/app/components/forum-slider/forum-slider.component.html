@@ -1,8 +1,9 @@
-<!--Check-->
+<!-- Se non ci sono forum da mostrare, visualizza un messaggio -->
 <div *ngIf="noForums">
   <p>Non ci sono forum disponibili.</p>
 </div>
 
+<!-- Se ci sono forum, mostra il carosello -->
 <ng-container *ngIf="!noForums">
   <div id="carouselArtistForums" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner mt-3">
@@ -19,12 +20,14 @@
       </div>
     </div>
 
+    <!-- Bottone per navigare alla slide precedente -->
     <button *ngIf="showPrev" class="carousel-control-prev" type="button" data-bs-target="#carouselArtistForums"
             data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Precedente</span>
     </button>
 
+    <!-- Bottone per navigare alla slide successiva, mostrato solo se showNext è true -->
     <button *ngIf="showNext" class="carousel-control-next" type="button" data-bs-target="#carouselArtistForums"
             data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>

@@ -1,14 +1,3 @@
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 0.95;
-    transform: translateY(0);
-  }
-}
-
 body {
   display: flex;
   justify-content: center;
@@ -78,7 +67,7 @@ body {
   width: 100%;
 }
 
-.scritta {
+.titles {
   font-weight: bold;
   margin-top: 15px;
   font-size: 30px;
@@ -170,4 +159,15 @@ body {
 button.btn-primary {
   width: 90%;
   margin: 20px auto;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 0.95;
+    transform: translateY(0);
+  }
 }

@@ -33,10 +33,13 @@ export class CreatePostComponent implements OnInit {
   ) {
   }
 
+  //caricamento location e configurazione autocomplete
   ngOnInit() {
     this.locationService.getAllLocations().subscribe({
       next: (locations) => {
         this.options = locations;
+
+        // Imposta la logica di filtro delle opzioni durante la digitazione
         this.filteredOptions = this.myControl.valueChanges.pipe(
           startWith(''),
           map(value => {
@@ -50,18 +53,19 @@ export class CreatePostComponent implements OnInit {
       }
     });
   }
-
+  // Funzione per visualizzare correttamente la descrizione nella barra di ricerca
   displayFn(location: GetAllLocationResponseDTO): string {
     return location?.description || '';
   }
 
+  // Funzione privata di filtro per le location
   private _filter(name: string): GetAllLocationResponseDTO[] {
     const filterValue = name.toLowerCase();
     return this.options.filter(option =>
       option.description.toLowerCase().includes(filterValue)
     );
   }
-
+  // Metodo chiamato quando l’utente seleziona un file immagine
   selectFile(event: any) {
     if (event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
@@ -75,6 +79,7 @@ export class CreatePostComponent implements OnInit {
     }
   }
 
+  // Metodo per validare e caricare un nuovo post
   uploadPost() {
     if (!this.title.trim()) {
       this.snackBar.open('Inserisci il titolo!', 'Chiudi', {
@@ -109,6 +114,7 @@ export class CreatePostComponent implements OnInit {
       return;
     }
 
+    // Crea un oggetto FormData con tutti i dati del post
     console.log(selectedLocation)
     const formData = new FormData();
     formData.append('title', this.title);
@@ -117,6 +123,7 @@ export class CreatePostComponent implements OnInit {
     formData.append('image', this.selectedFile);
     formData.append('idUser', localStorage.getItem('IdUser') || '');
 
+    // Invia il post tramite il servizio
     this.postService.createPost(formData).subscribe({
       next: () => {
         this.snackBar.open('Post caricato con successo!', 'Ok', {

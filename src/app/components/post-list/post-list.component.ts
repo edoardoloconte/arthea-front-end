@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
 import { PostService } from '../../services/post-service';
 import { GetAllPostResponseDTO } from '../../DTO/response/GetAllPostResponseDTO';
 import { PostFilterByTitleDTO } from '../../DTO/request/PostFilterByTitleDTO';
@@ -13,8 +14,12 @@ import { PostFilterByTitleDTO } from '../../DTO/request/PostFilterByTitleDTO';
 export class PostListComponent implements OnInit {
 
   posts: GetAllPostResponseDTO[] = [];
+
   searchQuery: string = '';
+
+  // Tipo di ricerca: '1' per artista, '2' per titolo
   searchType: string = '2';
+
   searchBarVisible = false;
   cardsVisible = false;
 
@@ -24,9 +29,11 @@ export class PostListComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
+  // Metodo chiamato al momento dell'inizializzazione del componente
   ngOnInit(): void {
     this.loadPosts();
 
+    // Effetti di fade-in per barra di ricerca e schede dei post
     setTimeout(() => {
       this.searchBarVisible = true;
       setTimeout(() => {
@@ -35,6 +42,7 @@ export class PostListComponent implements OnInit {
     }, 100);
   }
 
+  // Carica tutti i post dal backend
   loadPosts(): void {
     this.postService.getAllPosts().subscribe({
       next: (data) => {
@@ -46,21 +54,23 @@ export class PostListComponent implements OnInit {
     });
   }
 
+  // Esegue la ricerca in base al tipo selezionato
   search(): void {
     if (this.searchType === '2') {
-      this.searchByTitle();
+      this.searchByTitle(); // Ricerca per titolo
     } else if (this.searchType === '1') {
-      this.searchByArtist();
+      this.searchByArtist(); // Ricerca per artista
     }
   }
 
+  // Ricerca post filtrati per titolo
   private searchByTitle(): void {
     const request: PostFilterByTitleDTO = { title: this.searchQuery };
     this.postService.getAllPostByTitle(request).subscribe({
       next: (data) => {
         this.posts = data;
         if (data.length === 0) {
-          this.showSnackbar('Post non trovato');
+          this.showSnackbar('Post non trovato'); // Mostra messaggio se nessun risultato
         }
       },
       error: (error) => {
@@ -69,12 +79,13 @@ export class PostListComponent implements OnInit {
     });
   }
 
+  // Ricerca post filtrati per artista
   private searchByArtist(): void {
     this.postService.getAllPostFilteredByArtist(this.searchQuery).subscribe({
       next: (data) => {
         this.posts = data;
         if (data.length === 0) {
-          this.showSnackbar('Artista non trovato');
+          this.showSnackbar('Artista non trovato'); // Mostra messaggio se nessun risultato
         }
       },
       error: (error) => {
@@ -89,7 +100,8 @@ export class PostListComponent implements OnInit {
     });
   }
 
+  // Naviga al dettaglio di un post specifico
   navigateToPost(postId: number): void {
-    this.router.navigate(['/post'], { state: { idPost: postId } });
+    this.router.navigate(['/post'], { state: { idPost: postId } }); // Passa l'idPost tramite stato
   }
 }
