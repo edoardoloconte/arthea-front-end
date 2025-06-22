@@ -14,6 +14,7 @@
         routerLink="/edit-profile"
         style="cursor: pointer;">
         @{{ user.nickname }}
+
       </span>
     </div>
 
@@ -64,10 +65,10 @@
         <div class="comment-user d-flex align-items-center">
           <img
             [src]="comment.image"
-            class="user-icon"
+            [routerLink]="['/edit-profile', comment.idUser]"             class="user-icon"
             style="cursor: pointer;"
             alt="User Icon" />
-          <span class="username">@{{ comment.nickname }}</span>
+          <span class="username" [routerLink]="['/edit-profile', comment.idUser]">@{{ comment.nickname }}</span>
           <div class="comment-timestamp ms-2 text-muted" style="margin-bottom: 10px;">
             {{ comment.date | date: 'short' }}
           </div>

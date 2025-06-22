@@ -18,11 +18,9 @@
         <small class="text-body-secondary">{{ report.date | date:'dd/MM/yyyy' }}</small>
         <span class="icon-group">
           <!-- Visualizza commento (naviga al post associato) -->
-          <mat-icon class="action-icon" matTooltip="Visualizza Commento"
-                    (click)="navigateToPost(report.idCommentReported)">search</mat-icon>
-          <!-- Cancella la segnalazione -->
+                 <!-- Cancella la segnalazione -->
           <mat-icon class="action-icon" matTooltip="Cancella Segnalazione"
-                    (click)="confirmDeleteReport(i, 'comment')">delete</mat-icon>
+                    (click)="confirmDeleteComment(i, report.idCommentReported, report.idInteraction)">delete</mat-icon>
         </span>
       </h3>
 

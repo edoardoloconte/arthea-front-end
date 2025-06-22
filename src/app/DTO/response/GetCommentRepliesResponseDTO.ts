@@ -7,5 +7,6 @@ export class GetCommentRepliesResponseDTO{
   description: string;
   date: Date;
   getCommentRepliesResponseDTOList : GetCommentRepliesResponseDTO[]
+  idAuthorReply: number
 
 }

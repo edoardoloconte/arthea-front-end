@@ -197,12 +197,12 @@
               <div class="reply-card">
                 <div class="comment-header-with-menu">
                   <div class="comment-header new-layout">
-                    <a [routerLink]="['/edit-profile', reply.idUser]" class="profile-link">
+                    <a [routerLink]="['/edit-profile', reply.idAuthorReply]" class="profile-link">
                       <img [src]="reply.image || 'assets/persona.png'" alt="Reply Profile"
                            class="profile-image clickable">
                     </a>
                     <div class="inline-user-info">
-                      <a [routerLink]="['/edit-profile', reply.idUser]" class="username clickable underline-on-click">
+                      <a [routerLink]="['/edit-profile', reply.idAuthorReply]" class="username clickable underline-on-click">
                         {{ reply.nickname }}
                       </a>
                       <span class="dot"></span>

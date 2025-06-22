@@ -213,7 +213,6 @@ export class PostComponent implements OnInit, AfterViewInit {
           this.description = this.newDescription;
 
           this.fadeInDescription = true;
-          setTimeout(() => this.fadeInDescription = false, 500);
 
           this.cdr.detectChanges();
           this.isEditing = false;

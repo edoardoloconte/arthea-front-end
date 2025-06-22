@@ -69,6 +69,16 @@ export class ReportComponent implements OnInit {
     this.deleteReport();
   }
 
+  confirmDeleteComment(index: number, idComment: number, reportId: number) {
+    this.interactionService.deleteInteraction(idComment).subscribe(() => {
+      this.interactionService.getAllReportComment().subscribe(res => {
+        this.commentReports = res
+      })
+    });
+  }
+
+
+
   // Elimina la segnalazione selezionata in base al tipo e aggiorna l'interfaccia
   deleteReport(): void {
     if (this.confirmDeleteIndex === null || this.deleteType === null) return;
