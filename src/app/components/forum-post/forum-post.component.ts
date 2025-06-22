@@ -61,6 +61,7 @@ export class ForumPostComponent {
   @Input() author!: string;
   @Input() publishDate!: Date;
   @Input() profileImage!: string;
+  @Input() idAuthor!: number;
 
   @Input() set comments(value: GetCommentPerForumResponseDTO[]) {
     this._comments = [...value];
@@ -269,7 +270,8 @@ export class ForumPostComponent {
             image: res.image || 'assets/persona.png',
             idForum: res.idForum,
             idInteraction: res.idInteraction,
-            getCommentRepliesResponseDTOList: res.getCommentRepliesResponseDTOList
+            getCommentRepliesResponseDTOList: res.getCommentRepliesResponseDTOList,
+            idAuthorComment: res.idAuthorComment
           });
           this.commentText = '';
           this.refreshComments();

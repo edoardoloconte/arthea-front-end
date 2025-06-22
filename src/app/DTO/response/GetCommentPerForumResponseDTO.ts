@@ -8,6 +8,6 @@ export class GetCommentPerForumResponseDTO {
   description: string;
   date: Date;
   getCommentRepliesResponseDTOList : GetCommentRepliesResponseDTO[];
-
+  idAuthorComment: number
 
 }

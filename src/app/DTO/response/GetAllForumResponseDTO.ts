@@ -11,4 +11,5 @@ export class GetAllForumResponseDTO{
   profilePicArtist : string
   date : Date
   comments : GetCommentPerForumResponseDTO[]
+  idAuthor: number
 }

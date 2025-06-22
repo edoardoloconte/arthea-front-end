@@ -7,11 +7,11 @@
       <div class="card-header-row">
         <!-- Profilo autore con immagine e nome cliccabili -->
         <div class="profile-header">
-          <a [routerLink]="['/edit-profile', author]" class="profile-link">
+          <a [routerLink]="['/edit-profile', idAuthor]" class="profile-link">
             <img [src]="profileImage" alt="Profile Image" class="profile-image clickable">
           </a>
           <div class="profile-info">
-            <a [routerLink]="['/edit-profile', author]" class="username clickable">{{ author }}</a>
+            <a [routerLink]="['/edit-profile', idAuthor]" class="username clickable">{{ author }}</a>
             <span class="dot"></span>
             <span class="publish-date-inline">{{ publishDate | date:'dd/MM/yyyy' }}</span>
           </div>
@@ -128,11 +128,11 @@
           <!-- Header commento con utente e menu -->
           <div class="comment-header-with-menu">
             <div class="comment-header new-layout">
-              <a [routerLink]="['/edit-profile', comment.nickname]" class="profile-link">
+              <a [routerLink]="['/edit-profile', comment.idAuthorComment]" class="profile-link">
                 <img [src]="comment.image || 'assets/persona.png'" alt="Profile" class="profile-image clickable">
               </a>
               <div class="inline-user-info">
-                <a [routerLink]="['/edit-profile', comment.nickname]" class="username clickable underline-on-click">
+                <a [routerLink]="['/edit-profile', comment.idAuthorComment]" class="username clickable underline-on-click">
                   {{ comment.nickname }}
                 </a>
                 <span class="dot"></span>
@@ -197,12 +197,12 @@
               <div class="reply-card">
                 <div class="comment-header-with-menu">
                   <div class="comment-header new-layout">
-                    <a [routerLink]="['/edit-profile', reply.nickname]" class="profile-link">
+                    <a [routerLink]="['/edit-profile', reply.idUser]" class="profile-link">
                       <img [src]="reply.image || 'assets/persona.png'" alt="Reply Profile"
                            class="profile-image clickable">
                     </a>
                     <div class="inline-user-info">
-                      <a [routerLink]="['/edit-profile', reply.nickname]" class="username clickable underline-on-click">
+                      <a [routerLink]="['/edit-profile', reply.idUser]" class="username clickable underline-on-click">
                         {{ reply.nickname }}
                       </a>
                       <span class="dot"></span>
