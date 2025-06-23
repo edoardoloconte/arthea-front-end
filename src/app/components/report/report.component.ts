@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
-import { InteractionService } from "../../services/interaction-service";
-import { GetAllReportPostResponseDTO } from "../../DTO/response/GetAllReportPostResponseDTO";
-import { GetAllReportCommentResponseDTO } from "../../DTO/response/GetAllReportCommentResponseDTO";
-import { GetAllReportForumResponseDTO } from "../../DTO/response/GetAllReportForumResponseDTO";
+import {Component, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
+import {InteractionService} from "../../services/interaction-service";
+import {GetAllReportPostResponseDTO} from "../../DTO/response/GetAllReportPostResponseDTO";
+import {GetAllReportCommentResponseDTO} from "../../DTO/response/GetAllReportCommentResponseDTO";
+import {GetAllReportForumResponseDTO} from "../../DTO/response/GetAllReportForumResponseDTO";
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-report',
@@ -23,8 +24,10 @@ export class ReportComponent implements OnInit {
 
   constructor(
     private interactionService: InteractionService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadAllReports();
@@ -72,11 +75,15 @@ export class ReportComponent implements OnInit {
   confirmDeleteComment(index: number, idComment: number, reportId: number) {
     this.interactionService.deleteInteraction(idComment).subscribe(() => {
       this.interactionService.getAllReportComment().subscribe(res => {
-        this.commentReports = res
-      })
+        this.commentReports = res;
+        this.snackBar.open('Commento eliminato con successo', 'Chiudi', {
+          duration: 3000, horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['snackbar-error']
+        });
+      });
     });
   }
-
 
 
   // Elimina la segnalazione selezionata in base al tipo e aggiorna l'interfaccia
@@ -121,12 +128,12 @@ export class ReportComponent implements OnInit {
 
   // Naviga alla pagina di dettaglio del post selezionato
   navigateToPost(postId: number): void {
-    this.router.navigate(['/post'], { state: { idPost: postId } });
+    this.router.navigate(['/post'], {state: {idPost: postId}});
   }
 
   // Naviga alla sezione specifica del forum corrispondente all’ID
   goToForum(idForum: number): void {
-    this.router.navigate(['/forum'], { fragment: 'forum-' + idForum });
+    this.router.navigate(['/forum'], {fragment: 'forum-' + idForum});
   }
 
   // Metodo di placeholder per la navigazione al commento segnalato (da implementare)

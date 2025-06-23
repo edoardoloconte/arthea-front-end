@@ -216,6 +216,13 @@ export class PostComponent implements OnInit, AfterViewInit {
 
           this.cdr.detectChanges();
           this.isEditing = false;
+
+          this.snackBar.open('Descrizione aggiornata con successo!', 'Chiudi', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['snackbar-success']
+          });
         },
         error => {
           console.error('Errore aggiornando la descrizione:', error);
