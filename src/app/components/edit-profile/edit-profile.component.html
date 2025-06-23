@@ -82,7 +82,7 @@
         class="follow-btn fade-child delay-4"
         [ngClass]="{ 'followed': isFollowing }"
         (click)="toggleFollow()"
-        *ngIf="!isOwnProfile || userRole == 'ARTIST'"
+        *ngIf="!isOwnProfile && userRole == 'ARTIST'"
       >
         {{ isFollowing ? 'Segui già' : 'Segui' }}
       </button>
