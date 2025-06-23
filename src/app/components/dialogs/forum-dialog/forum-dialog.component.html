@@ -13,8 +13,8 @@
   <!-- Campo Descrizione -->
   <mat-form-field class="full-width" appearance="outline" color="accent">
     <mat-label>Descrizione</mat-label>
-    <textarea matInput #description maxlength="256" [(ngModel)]="formData.description" required></textarea>
-    <mat-hint align="end">{{description.value.length}} / 256</mat-hint>
+    <textarea matInput #description maxlength="500" [(ngModel)]="formData.description" required></textarea>
+    <mat-hint align="end">{{description.value.length}} / 500</mat-hint>
   </mat-form-field>
 
   <!-- Campo Upload immagine -->

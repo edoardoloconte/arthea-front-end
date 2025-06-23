@@ -9,7 +9,7 @@
       <!-- Bottone icona che apre il menu a tendina solo se:
           - Non è il proprio profilo (isOwnProfile = false)
           - L'utente ha ruolo ADMIN -->
-      <button mat-icon-button [matMenuTriggerFor]="userMenu" *ngIf="!isOwnProfile && userRole == 'ADMIN' ">
+      <button mat-icon-button [matMenuTriggerFor]="userMenu">
         <!-- Icona del bottone: tre puntini verticali -->
         <mat-icon>more_vert</mat-icon>
       </button>
